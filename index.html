@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="fa" dir="rtl">
 <head>
-    <title>اولین سایت من</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سایت من - با خط نسخ</title>
+    
+    <!-- لینک فونت زیبای نسخ (Amiri) از گوگل -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            /* استفاده از خط نسخ به عنوان فونت اصلی */
+            font-family: 'Amiri', serif;
+            
+            /* پس‌زمینه تیره و کلاسیک */
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            
+            /* رنگ طلایی برای نوشته‌ها */
+            color: #f4d03f;
+            
+            /* اندازه متن اصلی را کمی پایین آوردیم تا گوشی را پر نکند */
+            font-size: 24px;
+            
+            /* وسط‌چین کردن */
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            /* سایز را از ۶۵ پیکسل به ۴۵ پیکسل کاهش دادیم تا دقیقاً در یک خط جا شود */
+            font-size: 45px;
+            /* فاصله از جمله بعدی را بیشتر کردیم تا شلوغ نشود */
+            margin-bottom: 30px;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            letter-spacing: 1px;
+        }
+
+        p {
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
-    <h1>سلام! سایت من بالاخره راه افتاد.</h1>
-    <p>اینجا قرار است نرم‌افزارهای من قرار بگیرند.</p>
+    <h1>به نام خدا</h1>
+    <p>اینجا پایگاه نرم‌افزارهای من است.</p>
 </body>
 </html>
