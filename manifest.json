@@ -1,0 +1,7 @@
+
+  "name": "کتابخانه من",
+  "short_name": "کتابخانه",
+  "start_url": "ketabkhan.html",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#f4d03f"
