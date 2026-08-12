@@ -61,6 +61,21 @@ html[data-shell="green"]{
   --muted:#5a6b48;
   --shadow: 0 8px 22px rgba(30,40,15,.16);
 }
+html[data-shell="midnight"]{
+  --ink:#151a24;--ink-2:#1e2634;--ink-3:#273245;--lapis:#3f536f;
+  --gold:#8bb8d9;--gold-soft:#b9d9ef;--gold-dim:rgba(139,184,217,.32);
+  --ink-text:#e8eef6;--muted:#9db0c6;--shadow:0 10px 30px rgba(0,0,0,.38);
+}
+html[data-shell="plum"]{
+  --ink:#241a29;--ink-2:#302038;--ink-3:#3b2946;--lapis:#644b72;
+  --gold:#caa4e8;--gold-soft:#e1c7f3;--gold-dim:rgba(202,164,232,.30);
+  --ink-text:#f1e8f6;--muted:#c0a9c9;--shadow:0 10px 30px rgba(25,10,30,.38);
+}
+html[data-shell="burgundy"]{
+  --ink:#2b1519;--ink-2:#3a1d22;--ink-3:#4a252c;--lapis:#70414a;
+  --gold:#d6a56f;--gold-soft:#ecc58e;--gold-dim:rgba(214,165,111,.30);
+  --ink-text:#f4e7df;--muted:#c9a99a;--shadow:0 10px 30px rgba(35,8,12,.38);
+}
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;height:100%;}
 body{
@@ -109,6 +124,9 @@ input,select,textarea{font-family:inherit;}
 .shell-dot[data-shell-choice=brown]{background:#2b1c12;}
 .shell-dot[data-shell-choice=paper]{background:#efe6d0;border-color:#c9b98a;}
 .shell-dot[data-shell-choice=green]{background:#dde7d5;border-color:#a9bd98;}
+.shell-dot[data-shell-choice=midnight]{background:#243149;border-color:#8bb8d9;}
+.shell-dot[data-shell-choice=plum]{background:#3b2946;border-color:#caa4e8;}
+.shell-dot[data-shell-choice=burgundy]{background:#4a252c;border-color:#d6a56f;}
 .shell-dot.active{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-dim);}
 .btn{
   border:1px solid var(--gold-dim);
@@ -166,20 +184,23 @@ input,select,textarea{font-family:inherit;}
   background:linear-gradient(160deg, var(--ink-3), var(--ink));
 }
 .card .cover img{width:100%;height:100%;object-fit:cover;}
-.card .cover .title-seal{
-  width:82%;
-  border-radius:8px;
-  border:1px solid var(--gold-dim);
-  background:linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.32));
-  box-shadow:0 3px 6px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.10), inset 0 -1px 0 rgba(0,0,0,.35);
-  display:flex;align-items:center;justify-content:center;
-  padding:12px 16px;text-align:center;
+.card .cover.title-cover{
+  height:112px;min-height:112px;padding:12px 18px;
+  background:linear-gradient(135deg,var(--ink-3),var(--ink-2) 55%,var(--ink));
+  border-bottom:1px solid var(--gold-dim);
+  box-shadow:inset 0 -8px 22px rgba(0,0,0,.12);
 }
-.card .cover .title-seal span{
-  font-family:'Noto Naskh Arabic',serif;font-size:14px;font-weight:600;line-height:1.5;
-  color:var(--gold-soft);
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+.card .cover.title-cover .title-seal{
+  width:100%;height:100%;border:0;background:transparent;box-shadow:none;padding:0;
+  display:flex;align-items:center;justify-content:center;text-align:center;
 }
+.card .cover.title-cover .title-seal span{
+  font-family:'Amiri',serif;font-size:22px;font-weight:700;line-height:1.5;
+  color:var(--gold-soft);display:block;max-width:100%;
+}
+.card.no-cover .info{display:none;}
+.card.no-cover{min-height:112px;}
+.card.no-cover .progress-wrap{display:none;}
 .card .info{padding:11px 12px 13px;flex:1;display:flex;flex-direction:column;gap:5px;}
 .card .title{font-size:14.5px;font-weight:700;color:var(--ink-text);line-height:1.5;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
@@ -294,6 +315,11 @@ input,select,textarea{font-family:inherit;}
 .theme-dot[data-theme=dark]{background:#232b3d;}
 .theme-dot[data-theme=aged]{background:#ddcda1;}
 .theme-dot[data-theme=green]{background:#dbe8d6;}
+.theme-dot[data-theme=parchment]{background:#f2e4c3;}
+.theme-dot[data-theme=ivory]{background:#faf7ed;}
+.theme-dot[data-theme=aged2]{background:#d8c28f;}
+.theme-dot[data-theme=rose]{background:#ead9d4;}
+.theme-dot[data-theme=sage]{background:#dfe7d9;}
 .theme-dot.active{border-color:var(--gold);}
 
 .menu-wrap{position:relative;}
@@ -386,6 +412,11 @@ input,select,textarea{font-family:inherit;}
 mark.search-hit{background:#ffe14d;color:#241505;padding:0 1px;border-radius:2px;}
 mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b8860b;}
 
+.pdf-original-wrap{max-width:1080px;width:100%;margin:0 auto;padding:82px 20px 92px;overflow:auto;display:flex;justify-content:center;align-items:flex-start;}
+.pdf-page-canvas{max-width:100%;height:auto;box-shadow:0 12px 34px rgba(0,0,0,.28);background:#fff;}
+.pdf-page-placeholder{padding:80px 20px;text-align:center;color:var(--muted);}
+.pdf-mode-tab{display:none;}
+
 /* paginated (page-flip) mode */
 .reader-content-wrap.mode-paginated{
   overflow:hidden;
@@ -458,6 +489,16 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
 .mode-tab:disabled{opacity:.35;cursor:not-allowed;}
 
 /* reading themes */
+.theme-parchment .reader-content-wrap{background:#f2e4c3;color:#332710;}
+.theme-parchment .reader-meta-author{color:#725c34;}
+.theme-ivory .reader-content-wrap{background:#faf7ed;color:#302c23;}
+.theme-ivory .reader-meta-author{color:#716a5d;}
+.theme-aged2 .reader-content-wrap{background:#d8c28f;color:#3d2a10;background-image:radial-gradient(circle at 20% 15%,rgba(120,75,20,.12),transparent 35%),radial-gradient(circle at 80% 70%,rgba(90,55,15,.10),transparent 40%);}
+.theme-aged2 .reader-meta-author{color:#6d4d21;}
+.theme-rose .reader-content-wrap{background:#ead9d4;color:#3b2927;}
+.theme-rose .reader-meta-author{color:#765b56;}
+.theme-sage .reader-content-wrap{background:#dfe7d9;color:#293127;}
+.theme-sage .reader-meta-author{color:#5b6955;}
 .theme-light .reader-content-wrap{background:var(--parchment);color:#2c2410;}
 .theme-light .reader-meta-author{color:#7a6c47;}
 .theme-sepia .reader-content-wrap{background:var(--sepia);color:#3a2c12;}
@@ -531,6 +572,9 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
         <button class="shell-dot" data-shell-choice="brown" title="قهوه‌ای"></button>
         <button class="shell-dot" data-shell-choice="paper" title="ورق کهنه"></button>
         <button class="shell-dot" data-shell-choice="green" title="سبز روشن"></button>
+        <button class="shell-dot" data-shell-choice="midnight" title="شب آبی"></button>
+        <button class="shell-dot" data-shell-choice="plum" title="بنفش سلطنتی"></button>
+        <button class="shell-dot" data-shell-choice="burgundy" title="زرشکی"></button>
       </div>
       <button class="btn ghost" id="btnImport" title="بازگردانی کتاب‌ها از یک فایل پشتیبان">⇧ ورود پشتیبان</button>
       <button class="btn ghost" id="btnExport" title="دانلود یک فایل پشتیبان از همه‌ی کتاب‌ها برای محافظت در برابر پاک‌شدن حافظه‌ی مرورگر">⇩ خروجی پشتیبان</button>
@@ -600,7 +644,7 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
         </div>
         <textarea id="fContent" placeholder="متن کتاب را اینجا بچسبانید…"></textarea>
         <input type="file" id="fFile" accept=".txt,.html,.htm,.md,.pdf,.docx" class="hidden">
-        <p class="hint">فایل‌های پشتیبانی‌شده: txt, html, md, pdf, docx — پاراگراف‌ها با یک خط خالی از هم جدا شوند.</p>
+        <p class="hint">فایل‌های پشتیبانی‌شده: txt, html, md, pdf, docx — PDF اصلی بدون تغییر در حافظه‌ی کتاب نگه داشته می‌شود و علاوه بر حالت اصلی، متن آن برای تنظیم فونت و اندازه نیز در دسترس است.</p>
         <p class="hint">برای فعال‌شدن حالت «مطابق چاپی» (تطبیق با صفحات کتاب اصلی)، در پایان هر صفحه یک خط جداگانه فقط شامل === بنویسید.</p>
         <p class="hint">فهرست کتاب خودکار است: هر پاراگراف کوتاهی که با «باب»، «فصل»، «بخش»، «مقدمه» یا «خاتمه» شروع شود، در فهرست ظاهر می‌شود.</p>
       </div>
@@ -654,7 +698,20 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
               <button class="theme-dot" data-theme="dark" title="تیره"></button>
               <button class="theme-dot" data-theme="aged" title="ورق کهنه"></button>
               <button class="theme-dot" data-theme="green" title="سبز سفیده"></button>
+              <button class="theme-dot" data-theme="parchment" title="کاغذ گرم"></button>
+              <button class="theme-dot" data-theme="ivory" title="عاجی"></button>
+              <button class="theme-dot" data-theme="aged2" title="ورق کهنه"></button>
+              <button class="theme-dot" data-theme="rose" title="رز ملایم"></button>
+              <button class="theme-dot" data-theme="sage" title="سبز کاغذی"></button>
             </div>
+          </div>
+          <div class="settings-row">
+            <label>زبان نرم‌افزار</label>
+            <select id="languageSel">
+              <option value="fa">فارسی</option>
+              <option value="ar">العربية</option>
+              <option value="tg">Тоҷикӣ</option>
+            </select>
           </div>
           <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;">
             <label>حالت نمایش</label>
@@ -662,6 +719,8 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
               <button class="mode-tab" id="modeScroll" data-mode="scroll">📜 پیوسته</button>
               <button class="mode-tab" id="modePaginated" data-mode="paginated">📖 صفحه‌ای</button>
               <button class="mode-tab" id="modePrinted" data-mode="printed">📘 مطابق چاپی</button>
+              <button class="mode-tab pdf-mode-tab" id="modePdf" data-mode="pdf">📄 PDF اصلی</button>
+            <div class="hint" style="margin-top:6px">برای کتاب‌های حجیم، حالت صفحه‌ای فقط صفحه‌ی جاری را در حافظه‌ی صفحه نگه می‌دارد.</div>
             </div>
           </div>
         </div>
@@ -768,8 +827,8 @@ function safeSetItem(key, value){
 }
 function saveLibrary(lib){ safeSetItem(LIB_KEY, JSON.stringify(lib)); }
 function loadSettings(){
-  try{ return Object.assign({fontFamily:"'Noto Naskh Arabic',serif", fontSize:18, theme:'light', readerMode:'scroll', appShell:'brown'}, JSON.parse(localStorage.getItem(SETTINGS_KEY))||{}); }
-  catch(e){ return {fontFamily:"'Noto Naskh Arabic',serif", fontSize:18, theme:'light', readerMode:'scroll', appShell:'brown'}; }
+  try{ return Object.assign({fontFamily:"'Noto Naskh Arabic',serif", fontSize:18, theme:'light', readerMode:'scroll', appShell:'brown', language:'fa'}, JSON.parse(localStorage.getItem(SETTINGS_KEY))||{}); }
+  catch(e){ return {fontFamily:"'Noto Naskh Arabic',serif", fontSize:18, theme:'light', readerMode:'scroll', appShell:'brown', language:'fa'}; }
 }
 function saveSettings(s){ safeSetItem(SETTINGS_KEY, JSON.stringify(s)); }
 
@@ -777,6 +836,7 @@ function saveSettings(s){ safeSetItem(SETTINGS_KEY, JSON.stringify(s)); }
 const IDB_NAME = 'ketabkhanDB';
 const IDB_STORE = 'bookContent';
 const IDB_CHUNK_STORE = 'bookContentChunks';
+const IDB_FILE_STORE = 'bookFiles';
 const IDB_VERSION = 2;
 const CONTENT_CHUNK_SIZE = 512 * 1024; // characters; keeps large books out of one giant IDB record
 let idbPromise = null;
@@ -789,6 +849,7 @@ function openIDB(){
       const db = req.result;
       if(!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
       if(!db.objectStoreNames.contains(IDB_CHUNK_STORE)) db.createObjectStore(IDB_CHUNK_STORE);
+      if(!db.objectStoreNames.contains(IDB_FILE_STORE)) db.createObjectStore(IDB_FILE_STORE);
     };
     req.onsuccess = ()=>resolve(req.result);
     req.onerror = ()=>reject(req.error);
@@ -837,11 +898,30 @@ async function idbSetChunks(id, text){
     tx.onabort = ()=>reject(tx.error || new Error('IndexedDB transaction aborted'));
   });
 }
+async function idbSetFile(id, buffer, mime, name){
+  const db = await openIDB();
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_FILE_STORE, 'readwrite');
+    tx.objectStore(IDB_FILE_STORE).put({buffer, mime:mime||'application/octet-stream', name:name||''}, id);
+    tx.oncomplete=()=>resolve(true); tx.onerror=()=>reject(tx.error);
+  });
+}
+async function idbGetFile(id){
+  try{
+    const db=await openIDB();
+    return await new Promise((resolve,reject)=>{
+      const req=db.transaction(IDB_FILE_STORE,'readonly').objectStore(IDB_FILE_STORE).get(id);
+      req.onsuccess=()=>resolve(req.result||null); req.onerror=()=>reject(req.error);
+    });
+  }catch(e){ return null; }
+}
+
 async function idbDelete(id){
   try{
     const db = await openIDB();
-    const tx = db.transaction([IDB_STORE, IDB_CHUNK_STORE], 'readwrite');
+    const tx = db.transaction([IDB_STORE, IDB_CHUNK_STORE, IDB_FILE_STORE], 'readwrite');
     tx.objectStore(IDB_STORE).delete(id);
+    tx.objectStore(IDB_FILE_STORE).delete(id);
     const store = tx.objectStore(IDB_CHUNK_STORE);
     const metaReq = store.get(id + ':meta');
     metaReq.onsuccess = ()=>{
@@ -1047,18 +1127,18 @@ async function renderLibrary(){
   grid.className = 'grid';
   list.forEach(b=>{
     const card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'card' + (!b.cover ? ' no-cover' : '');
     card.onclick = ()=>openBook(b.id);
     const coverInner = b.cover
       ? `<img src="${b.cover}" alt="">`
       : `<div class="title-seal"><span>${escapeHtml(b.title||'بدون عنوان')}</span></div>`;
-    const titleRow = b.cover ? `<div class="title">${escapeHtml(b.title||'بدون عنوان')}</div>` : '';
+    const titleRow = '';
     card.innerHTML = `
       <div class="card-actions">
         <div class="icon-btn" data-act="move" title="انتقال به پوشه‌ی دیگر">🗂</div>
         <div class="icon-btn" data-act="del" title="حذف کتاب">🗑</div>
       </div>
-      <div class="cover">${coverInner}</div>
+      <div class="cover${b.cover ? '' : ' title-cover'}">${coverInner}</div>
       <div class="info">
         ${titleRow}
         <div class="author">${escapeHtml(b.author||'نویسنده نامشخص')}</div>
@@ -1204,9 +1284,8 @@ if(window.pdfjsLib){
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
-async function extractTextFromPdf(file){
+async function extractTextFromPdfBuffer(buf){
   if(!window.pdfjsLib) throw new Error('کتابخانه‌ی خواندن PDF بارگذاری نشد (اتصال اینترنت را بررسی کنید)');
-  const buf = await readFileAsArrayBuffer(file);
   const pdf = await pdfjsLib.getDocument({data: buf}).promise;
   const pageTexts = [];
   const LINE_TOLERANCE = 6; // pdf units; groups diacritic marks (tashkeel) with their base line
@@ -1241,6 +1320,9 @@ async function extractTextFromPdf(file){
   }
   return pageTexts.filter(Boolean).join('\n\n===\n\n');
 }
+async function extractTextFromPdf(file){
+  return extractTextFromPdfBuffer(await readFileAsArrayBuffer(file));
+}
 
 async function extractTextFromDocx(file){
   if(!window.mammoth) throw new Error('کتابخانه‌ی خواندن Word بارگذاری نشد (اتصال اینترنت را بررسی کنید)');
@@ -1259,6 +1341,10 @@ document.getElementById('saveBook').onclick = async ()=>{
   if(!title){ toast('لطفاً عنوان کتاب را وارد کنید'); return; }
 
   let text = '';
+  let sourceType = 'text';
+  let sourceFileBuffer = null;
+  let sourceFileName = '';
+  let sourceFileMime = '';
   const useFile = !fFile.classList.contains('hidden');
   if(useFile){
     const file = fFile.files[0];
@@ -1266,8 +1352,10 @@ document.getElementById('saveBook').onclick = async ()=>{
     const name = file.name.toLowerCase();
     try{
       if(name.endsWith('.pdf')){
-        toast('در حال استخراج متن از PDF…');
-        text = await extractTextFromPdf(file);
+        sourceType = 'pdf'; sourceFileName = file.name; sourceFileMime = file.type || 'application/pdf';
+        toast('در حال آماده‌سازی PDF؛ فایل اصلی بدون تغییر نگه داشته می‌شود…');
+        sourceFileBuffer = await readFileAsArrayBuffer(file);
+        text = await extractTextFromPdfBuffer(sourceFileBuffer);
       } else if(name.endsWith('.docx')){
         toast('در حال استخراج متن از Word…');
         text = await extractTextFromDocx(file);
@@ -1298,6 +1386,10 @@ document.getElementById('saveBook').onclick = async ()=>{
   const wordCount = text.split(/\s+/).filter(Boolean).length;
 
   const contentOk = await setContent(id, paragraphs.join('\n\n'));
+  if(contentOk && sourceType==='pdf' && sourceFileBuffer){
+    try{ await idbSetFile(id, sourceFileBuffer, sourceFileMime, sourceFileName); }
+    catch(e){ toast('متن ذخیره شد، اما فایل اصلی PDF ذخیره نشد: '+(e.message||'نامشخص')); }
+  }
   if(!contentOk){
     toast('کتاب خیلی بزرگ است و در حافظه‌ی مرورگر جا نمی‌شود. لطفاً ابتدا یک خروجی پشتیبان تهیه و چند کتاب کم‌استفاده را حذف کنید.');
     return;
@@ -1307,7 +1399,7 @@ document.getElementById('saveBook').onclick = async ()=>{
     addedAt: Date.now(),
     cover: coverData,
     progress: 0,
-    wordCount
+    wordCount, sourceType, sourceFileName
   });
   saveLibrary(library);
   saveBookState(id, {scrollPercent:0, fontFamily:null, fontSize:null, theme:null, bookmarks:[], highlights:[]});
@@ -1390,8 +1482,8 @@ async function openBook(id){
   const hasMarkers = currentParagraphs.some(p=>/^={3,}$/.test(p.trim()));
   if(mode==='printed' && !hasMarkers) mode = 'scroll';
   if(isLarge && mode==='paginated'){
-    mode = 'scroll';
-    toast('این کتاب حجیم است؛ برای روانی بیشتر در حالت پیوسته باز می‌شود');
+    // Large books use virtual pages: only the current page is in the DOM.
+    virtualPaginationReady=false;
   }
   readerBookTitle.textContent = book.title || 'کتاب';
   updateReaderTopInfo(1, null);
@@ -1414,7 +1506,18 @@ async function openBook(id){
   readerMode = mode;
 
   function finishOpen(){
-    if(mode==='printed'){
+    if(mode==='pdf'){
+      readerContent.innerHTML='<div class="pdf-page-placeholder">در حال باز کردن PDF اصلی…</div>';
+      loadPdfDocument().then(()=>{
+        const total=pdfDoc?pdfDoc.numPages:1;
+        const page=Math.round((st.scrollPercent||0)/100*(total-1));
+        pagi.totalPages=total; pagi.pageIndex=page;
+        return renderPdfPage(page+1);
+      }).catch(()=>{
+        toast('فایل اصلی PDF در دسترس نیست؛ حالت پیوسته را انتخاب کنید.');
+        readerMode='scroll'; updateModeTabsUI('scroll',hasMarkers); renderReaderContent();
+      });
+    } else if(mode==='printed'){
       computePrintedPages();
       const page = Math.round((st.scrollPercent/100)*(printedPages.length-1)) || 0;
       goToPage(Math.min(Math.max(0,page), printedPages.length-1), false);
@@ -1422,7 +1525,8 @@ async function openBook(id){
       renderReaderContent();
       requestAnimationFrame(()=>{
         if(mode==='paginated'){
-          remeasurePaginationToPercent(st.scrollPercent||0);
+          if(isLarge){ buildVirtualPages(); const page=Math.round((st.scrollPercent||0)/100*(virtualPages.length-1)); goToVirtualPage(page,false); }
+          else remeasurePaginationToPercent(st.scrollPercent||0);
         } else {
           const max = contentWrap.scrollHeight - contentWrap.clientHeight;
           contentWrap.scrollTop = max>0 ? (st.scrollPercent/100)*max : 0;
@@ -1440,6 +1544,85 @@ async function openBook(id){
   } else {
     finishOpen();
   }
+}
+
+let virtualPages = [];
+let virtualPaginationReady = false;
+let pdfDoc = null;
+let pdfRendering = false;
+function isLargeBook(){ const b=currentBook(); return !!(b && (b.wordCount||0)>LARGE_BOOK_WORD_THRESHOLD); }
+function estimatePageChars(){
+  const fs=parseInt(document.getElementById('fsVal').textContent,10)||18;
+  const w=Math.max(280, contentWrap.clientWidth-64);
+  const h=Math.max(360, contentWrap.clientHeight-180);
+  return Math.max(650, Math.floor((w*h)/(fs*fs*1.9)));
+}
+function buildVirtualPages(){
+  virtualPages=[];
+  const target=estimatePageChars();
+  let start=0, len=currentParagraphs.length;
+  while(start<len){
+    let end=start, chars=0;
+    while(end<len){
+      const add=currentParagraphs[end].length+2;
+      if(end>start && chars+add>target) break;
+      chars+=add; end++;
+      if(end-start>=80) break;
+    }
+    if(end<=start) end=start+1;
+    virtualPages.push({start,end:end-1}); start=end;
+  }
+  if(!virtualPages.length) virtualPages=[{start:0,end:Math.max(0,len-1)}];
+  virtualPaginationReady=true;
+  pagi.totalPages=virtualPages.length;
+}
+function renderVirtualPage(idx){
+  const r=virtualPages[idx]; if(!r) return;
+  const st=getBookState(currentBookId);
+  let html='';
+  for(let i=r.start;i<=r.end;i++) html+=`<p data-pindex="${i}">${renderParagraphHTML(currentParagraphs[i],i,st.highlights)}</p>`;
+  readerContent.style.columnWidth=''; readerContent.style.height='auto'; readerContent.style.transform='none';
+  readerContent.innerHTML=html;
+  readerContent.parentElement.scrollTop=0;
+  updateReaderTopInfo(idx+1,virtualPages.length);
+}
+function goToVirtualPage(n,animate){
+  if(!virtualPaginationReady) buildVirtualPages();
+  n=Math.min(Math.max(0,n),virtualPages.length-1);
+  pagi.pageIndex=n; pagi.totalPages=virtualPages.length;
+  renderVirtualPage(n);
+  document.getElementById('pagiLabel').textContent=`صفحه ${n+1} از ${virtualPages.length}`;
+  document.getElementById('pagiPrev').disabled=n<=0;
+  document.getElementById('pagiNext').disabled=n>=virtualPages.length-1;
+  progressBar.style.width=(virtualPages.length>1?(n/(virtualPages.length-1))*100:0)+'%';
+  saveScrollProgress(false);
+}
+async function loadPdfDocument(){
+  const b=currentBook(); if(!b || b.sourceType!=='pdf') return null;
+  const file=await idbGetFile(b.id);
+  if(!file || !file.buffer) return null;
+  if(!window.pdfjsLib) return null;
+  pdfDoc=await pdfjsLib.getDocument({data:file.buffer}).promise;
+  return pdfDoc;
+}
+async function renderPdfPage(pageNo){
+  if(!pdfDoc) await loadPdfDocument();
+  if(!pdfDoc) { readerContent.innerHTML='<div class="pdf-page-placeholder">فایل اصلی PDF در دسترس نیست؛ حالت «متن قابل تنظیم» را استفاده کنید.</div>'; return; }
+  pageNo=Math.min(Math.max(1,pageNo),pdfDoc.numPages);
+  const page=await pdfDoc.getPage(pageNo);
+  const base=page.getViewport({scale:1});
+  const maxW=Math.max(280,contentWrap.clientWidth-40);
+  const scale=Math.min(1.8, maxW/base.width);
+  const vp=page.getViewport({scale});
+  const canvas=document.createElement('canvas'); canvas.className='pdf-page-canvas'; canvas.width=Math.ceil(vp.width); canvas.height=Math.ceil(vp.height);
+  const ctx=canvas.getContext('2d');
+  readerContent.style.columnWidth=''; readerContent.style.transform='none'; readerContent.innerHTML='';
+  readerContent.appendChild(canvas);
+  await page.render({canvasContext:ctx,viewport:vp}).promise;
+  updateReaderTopInfo(pageNo,pdfDoc.numPages);
+  document.getElementById('pagiLabel').textContent=`صفحه ${pageNo} از ${pdfDoc.numPages}`;
+  document.getElementById('pagiPrev').disabled=pageNo<=1; document.getElementById('pagiNext').disabled=pageNo>=pdfDoc.numPages;
+  progressBar.style.width=(pdfDoc.numPages>1?((pageNo-1)/(pdfDoc.numPages-1))*100:0)+'%';
 }
 
 function remeasurePaginationToPercent(pct){
@@ -1520,18 +1703,24 @@ function renderPrintedPage(idx){
 }
 
 function updateModeTabsUI(mode, hasMarkers){
-  document.querySelectorAll('.mode-tab').forEach(btn=>{
-    btn.classList.toggle('active', btn.dataset.mode===mode);
-  });
-  const printedBtn = document.getElementById('modePrinted');
-  printedBtn.disabled = !hasMarkers;
-  printedBtn.title = hasMarkers ? '' : 'برای تطبیق دقیق، کتاب باید مرز صفحات را داشته باشد؛ PDF این مرزها را خودکار حفظ می‌کند';
+  document.querySelectorAll('.mode-tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.mode===mode));
+  const printedBtn=document.getElementById('modePrinted');
+  printedBtn.disabled=!hasMarkers;
+  printedBtn.title=hasMarkers?'':'برای تطبیق دقیق، مرز صفحات لازم است.';
+  const pdfBtn=document.getElementById('modePdf');
+  const isPdf=!!(currentBook() && currentBook().sourceType==='pdf');
+  pdfBtn.style.display=isPdf?'inline-flex':'none';
+  pdfBtn.disabled=!isPdf;
 }
 
 function setReaderMode(mode, persist){
   const book = currentBook();
   if(mode==='paginated' && book && (book.wordCount||0) > LARGE_BOOK_WORD_THRESHOLD){
-    toast('این کتاب حجیم است؛ حالت صفحه‌ای ممکن است کند باشد');
+    virtualPaginationReady=false;
+  }
+  if(mode==='pdf'){
+    if(!currentBook() || currentBook().sourceType!=='pdf'){ toast('این کتاب PDF نیست'); return; }
+    pdfDoc=null; pagi.pageIndex=0;
   }
   if(mode==='printed'){
     computePrintedPages();
@@ -1555,7 +1744,12 @@ function setReaderMode(mode, persist){
   updateModeTabsUI(mode, currentParagraphs.some(p=>/^={3,}$/.test(p.trim())));
   readerContent.style.transform = '';
   if(mode==='paginated'){
-    remeasurePaginationToPercent(scrollFracBefore*100);
+    if(isLargeBook()){ virtualPaginationReady=false; buildVirtualPages(); goToVirtualPage(Math.round(scrollFracBefore*(virtualPages.length-1)),false); }
+    else remeasurePaginationToPercent(scrollFracBefore*100);
+  } else if(mode==='pdf'){
+    contentWrap.classList.remove('mode-paginated');
+    readerContent.innerHTML='<div class="pdf-page-placeholder">در حال باز کردن PDF اصلی…</div>';
+    loadPdfDocument().then(()=>renderPdfPage(Math.max(1,Math.round(scrollFracBefore*((pdfDoc?.numPages||1)-1))+1))).catch(()=>renderPdfPage(1));
   } else if(mode==='printed'){
     const page = Math.round(scrollFracBefore*(printedPages.length-1));
     goToPage(Math.min(Math.max(0,page), printedPages.length-1), false);
@@ -1582,6 +1776,10 @@ document.querySelectorAll('.mode-tab').forEach(btn=>{
 
 function remeasurePagination(preserveFraction){
   if(readerMode!=='paginated' || !currentBookId) return;
+  if(isLargeBook()){
+    const frac=preserveFraction && pagi.totalPages>1 ? pagi.pageIndex/(pagi.totalPages-1) : 0;
+    virtualPaginationReady=false; buildVirtualPages(); goToVirtualPage(Math.round(frac*(virtualPages.length-1)),false); return;
+  }
   const priorFrac = preserveFraction && pagi.totalPages>1 ? pagi.pageIndex/(pagi.totalPages-1) : 0;
   readerContent.style.transform = 'translateX(0px)';
   readerContent.style.columnWidth = '';
@@ -1604,6 +1802,8 @@ function remeasurePagination(preserveFraction){
 }
 
 function goToPage(n, animate){
+  if(readerMode==='paginated' && isLargeBook()){ goToVirtualPage(n,animate); return; }
+  if(readerMode==='pdf'){ renderPdfPage(n+1); pagi.pageIndex=n; return; }
   if(readerMode==='printed'){
     n = Math.min(Math.max(0, n), printedPages.length-1);
     pagi.pageIndex = n;
@@ -1729,7 +1929,7 @@ document.addEventListener('keydown', (e)=>{
   if(e.key==='ArrowLeft') goToPage(pagi.pageIndex+1);
   if(e.key==='ArrowRight') goToPage(pagi.pageIndex-1);
 });
-window.addEventListener('resize', ()=>{ if(readerMode==='paginated') remeasurePagination(true); });
+window.addEventListener('resize', ()=>{ if(readerMode==='paginated') remeasurePagination(true); else if(readerMode==='pdf' && pdfDoc) renderPdfPage(pagi.pageIndex+1); });
 
 function renderParagraphHTML(text, pIndex, highlights){
   const hls = (highlights||[]).filter(h=>h.pIndex===pIndex).sort((a,b)=>a.start-b.start);
@@ -1746,6 +1946,7 @@ function renderParagraphHTML(text, pIndex, highlights){
 }
 
 /* --- font / size / theme controls --- */
+document.getElementById('languageSel').addEventListener('change',(e)=>applyLanguage(e.target.value,true));
 document.getElementById('fontFamilySel').addEventListener('change', (e)=>{
   readerContent.style.fontFamily = e.target.value;
   persistBookPref('fontFamily', e.target.value);
@@ -1765,7 +1966,7 @@ document.querySelectorAll('.theme-dot').forEach(dot=>{
   dot.onclick = ()=> setReaderTheme(dot.dataset.theme, true);
 });
 function setReaderTheme(theme, persist){
-  readerView.classList.remove('theme-light','theme-sepia','theme-dark','theme-aged','theme-green');
+  readerView.classList.remove('theme-light','theme-sepia','theme-dark','theme-aged','theme-green','theme-parchment','theme-ivory','theme-aged2','theme-rose','theme-sage');
   readerView.classList.add('theme-'+theme);
   document.querySelectorAll('.theme-dot').forEach(d=>d.classList.toggle('active', d.dataset.theme===theme));
   if(persist) persistBookPref('theme', theme);
@@ -1790,7 +1991,7 @@ contentWrap.addEventListener('scroll', ()=>{
 function saveScrollProgress(immediate){
   if(!currentBookId) return;
   let pct;
-  if(readerMode==='paginated'){
+  if(readerMode==='paginated' || readerMode==='pdf'){
     pct = pagi.totalPages>1 ? (pagi.pageIndex/(pagi.totalPages-1))*100 : 0;
   } else if(readerMode==='printed'){
     pct = printedPages.length>1 ? (pagi.pageIndex/(printedPages.length-1))*100 : 0;
@@ -2237,6 +2438,7 @@ async function runCurrentSearch(){
   const q = inBookSearchInput.value.trim();
   if(searchScope==='book'){
     bookSearchResults.classList.add('hidden');
+    if(readerMode==='pdf'){ setReaderMode('scroll',false); toast('برای جستجو، متن قابل تنظیم PDF فعال شد'); }
     if(readerMode==='printed'){ runPrintedSearch(q); return; }
     if(q.length < 2){ clearSearchMarks(); matchCountEl.textContent=''; return; }
     const marks = applySearchMarks(q);
@@ -2340,6 +2542,33 @@ function jumpToRange(pIndex, start, end){
   if(readerMode!=='paginated') pEl.scrollIntoView({block:'center', behavior:'smooth'});
 }
 
+/* ---------------- multilingual UI ---------------- */
+const I18N={
+  fa:{name:'فارسی',dir:'rtl',title:'کتابخانه‌ی من | ketabkhan'},
+  ar:{name:'العربية',dir:'rtl',title:'مكتبتي | ketabkhan'},
+  tg:{name:'Тоҷикӣ',dir:'ltr',title:'Китобхонаи ман | ketabkhan'}
+};
+const UI_TRANSLATIONS={
+  ar:{'بازگشت':'رجوع','امکانات':'الخيارات','جستجو':'بحث','تنظیمات':'الإعدادات','قلم':'الخط','اندازه‌ی حروف':'حجم الحروف','پوسته‌ی رنگی':'ألوان القراءة','زبان نرم‌افزار':'لغة البرنامج','حالت نمایش':'وضع العرض','پیوسته':'متواصل','صفحه‌ای':'صفحات','مطابق چاپی':'مطابق للطباعة','PDF اصلی':'PDF الأصلي','ثبت نشانه در اینجا':'إضافة علامة هنا','نشانه‌ها و یادداشت‌ها':'العلامات والملاحظات','اشتراک‌گذاری با دیگران':'مشاركة الكتاب','همه‌ی کتاب‌ها':'كل الكتب','این کتاب':'هذا الكتاب','ورق کهنه':'ورق قديم','روشن':'فاتح','تیره':'داكن','سبز روشن':'أخضر فاتح','شب آبی':'ليلي أزرق','بنفش سلطنتی':'بنفسجي ملكي','زرشکی':'عنابي'},
+  tg:{'بازگشت':'Бозгашт','امکانات':'Имконот','جستجو':'Ҷустуҷӯ','تنظیمات':'Танзимот','قلم':'Ҳуруф','اندازه‌ی حروف':'Андозаи ҳарф','پوسته‌ی رنگی':'Рангҳои хондан','زبان نرم‌افزار':'Забони барнома','حالت نمایش':'Ҳолати намоиш','پیوسته':'Пайваста','صفحه‌ای':'Саҳифаҳо','مطابق چاپی':'Мувофиқи чоп','PDF اصلی':'PDF аслӣ','ثبت نشانه در اینجا':'Нишона гузоштан','نشانه‌ها و یادداشت‌ها':'Нишонаҳо ва ёддоштҳо','اشتراک‌گذاری با دیگران':'Мубодила','همه‌ی کتاب‌ها':'Ҳамаи китобҳо','این کتاب':'Ин китоб','ورق کهنه':'Варақи кӯҳна','روشن':'Равшан','تیره':'Торик','سبز روشن':'Сабзи равшан','شب آبی':'Шаби кабуд','بنفش سلطنتی':'Бунафши шоҳона','زرشکی':'Бургундӣ'}
+};
+function translateKnownUI(lang){
+  const dict=UI_TRANSLATIONS[lang]||{};
+  document.querySelectorAll('button,label,h1,h2,h3,h4,p,span,option').forEach(el=>{
+    if(el.dataset.i18nBase===undefined) el.dataset.i18nBase=el.textContent.trim();
+    const base=el.dataset.i18nBase;
+    if(dict[base]) el.textContent=dict[base]; else if(lang==='fa') el.textContent=base;
+  });
+  document.title=I18N[lang].title;
+  document.documentElement.lang=lang; document.documentElement.dir=I18N[lang].dir;
+}
+function applyLanguage(lang,persist){
+  if(!I18N[lang]) lang='fa';
+  translateKnownUI(lang);
+  const sel=document.getElementById('languageSel'); if(sel) sel.value=lang;
+  if(persist){settings.language=lang; saveSettings(settings);}
+}
+
 /* ---------------- init ---------------- */
 function applyShellTheme(shell){
   document.documentElement.setAttribute('data-shell', shell);
@@ -2353,6 +2582,7 @@ document.querySelectorAll('.shell-dot').forEach(d=>{
   };
 });
 applyShellTheme(settings.appShell || 'brown');
+applyLanguage(settings.language || 'fa', false);
 
 renderLibrary();
 
@@ -2363,7 +2593,7 @@ renderLibrary();
    Storage (not IndexedDB/localStorage where books and reading state live),
    then reloads once.  After recovery the current sw.js is registered again.
 -------------------------------------------------------------------------- */
-const APP_CACHE_RECOVERY_KEY = 'ketabkhan_cache_recovery_v3';
+const APP_CACHE_RECOVERY_KEY = 'ketabkhan_cache_recovery_v4';
 async function recoverStaleServiceWorker(){
   if(!('serviceWorker' in navigator) || !(location.protocol==='https:' || location.hostname==='localhost')) return;
   if(sessionStorage.getItem(APP_CACHE_RECOVERY_KEY)==='done') return;
