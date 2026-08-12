@@ -257,12 +257,28 @@ input,select,textarea{font-family:inherit;}
 .hint{font-size:11.5px;color:var(--muted);}
 
 /* ===== Reader ===== */
-#readerView{position:fixed;inset:0;background:var(--parchment);z-index:50;display:flex;flex-direction:column;}
+#readerView{position:fixed;inset:0;background:var(--parchment);z-index:50;display:flex;flex-direction:column;overflow:hidden;}
+/* Reader chrome is an overlay: hiding it never changes the text layout. */
 .reader-topbar{
-  background:var(--ink);color:var(--ink-text);
-  display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap;
-  border-bottom:2px solid var(--gold-dim);
+  position:absolute;inset:0 0 auto 0;z-index:80;
+  min-height:62px;box-sizing:border-box;
+  background:linear-gradient(180deg,rgba(36,20,8,.98),rgba(36,20,8,.93));color:var(--ink-text);
+  display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 16px;
+  border-bottom:1px solid var(--gold-dim);
+  pointer-events:none;
 }
+.reader-topbar > *{pointer-events:auto;}
+.reader-back{position:absolute;right:16px;top:9px;}
+.reader-actions{position:absolute;left:16px;top:9px;display:flex;align-items:center;gap:8px;direction:ltr;}
+.reader-titlebar{
+  max-width:min(58vw,720px);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  line-height:1.15;text-align:center;pointer-events:none;
+}
+.reader-titlebar .book-title{
+  font-family:'Amiri',serif;font-size:22px;font-weight:700;color:var(--gold-soft);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.reader-titlebar .book-page{font-size:11.5px;color:var(--muted);margin-top:3px;white-space:nowrap;}
 .reader-controls select{
   background:var(--ink-2);border:1px solid var(--lapis);color:var(--ink-text);
   padding:7px 9px;border-radius:8px;font-size:12.5px;
@@ -358,8 +374,8 @@ input,select,textarea{font-family:inherit;}
 .progress-outer{height:3px;background:rgba(0,0,0,.15);}
 .progress-inner{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-soft));width:0%;transition:width .15s;}
 
-.reader-body{flex:1;display:flex;overflow:hidden;}
-.reader-content-wrap{flex:1;overflow-y:auto;padding:40px 0 120px;}
+.reader-body{position:absolute;inset:0;display:flex;overflow:hidden;}
+.reader-content-wrap{flex:1;overflow-y:auto;padding:82px 0 92px;box-sizing:border-box;}
 .reader-content{max-width:1080px;margin:0 auto;padding:0 30px;}
 .reader-content p{margin:0 0 1.35em;text-align:justify;direction:rtl;}
 .reader-content p:empty{display:none;}
@@ -374,8 +390,9 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
 .reader-content-wrap.mode-paginated{
   overflow:hidden;
   max-width:1080px;
+  width:100%;
   margin:0 auto;
-  padding:34px 32px 46px;
+  padding:88px 32px 92px;
 }
 .reader-content-wrap.mode-paginated .reader-content{
   max-width:none;margin:0;padding:0;width:100%;height:100%;
@@ -384,12 +401,19 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
   will-change:transform;
 }
 .pagi-bar{
+  position:absolute;inset:auto 0 0 0;z-index:80;
   display:none;align-items:center;justify-content:center;gap:16px;
-  padding:8px 10px;background:var(--ink);border-top:1px solid var(--gold-dim);
-  color:var(--ink-text);font-size:13px;
+  min-height:58px;box-sizing:border-box;padding:8px 10px;background:linear-gradient(0deg,rgba(36,20,8,.98),rgba(36,20,8,.93));
+  border-top:1px solid var(--gold-dim);color:var(--ink-text);font-size:13px;
+  pointer-events:none;
 }
+.pagi-bar > *{pointer-events:auto;}
 .pagi-bar.show{display:flex;}
-.pagi-page-controls{display:flex;align-items:center;gap:16px;}
+.pagi-page-controls{display:flex;align-items:center;gap:16px;direction:ltr;}
+.pagi-page-controls #pagiPrev{order:1;}
+.pagi-page-controls #pagiLabel{order:2;direction:rtl;}
+.pagi-page-controls #pagiNext{order:3;}
+.pagi-page-controls .pagi-jump{order:4;direction:rtl;}
 .pagi-page-controls.hidden{display:none;}
 .pagi-bar button{
   width:34px;height:34px;border-radius:9px;border:1px solid var(--gold-dim);
@@ -421,11 +445,10 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
 .toc-item:hover{background:var(--ink);}
 .toc-empty{padding:10px;font-size:12px;color:var(--muted);}
 
-/* immersive mode: tapping the reading area hides/shows both top and bottom bars */
-.reader-topbar{transition:max-height .25s ease, padding .25s ease, opacity .2s ease, border-color .25s ease; max-height:70px; overflow:hidden;}
-.pagi-bar{transition:max-height .25s ease, padding .25s ease, opacity .2s ease, border-color .25s ease; max-height:70px; overflow:hidden;}
-#readerView.chrome-hidden .reader-topbar{max-height:0;padding-top:0;padding-bottom:0;opacity:0;border-bottom-color:transparent;}
-#readerView.chrome-hidden .pagi-bar{max-height:0;padding-top:0;padding-bottom:0;opacity:0;border-top-color:transparent;}
+/* immersive mode: bars fade as overlays; the text never moves. */
+.reader-topbar,.pagi-bar{transition:transform .25s ease,opacity .2s ease;}
+#readerView.chrome-hidden .reader-topbar{transform:translateY(-105%);opacity:0;pointer-events:none;}
+#readerView.chrome-hidden .pagi-bar{transform:translateY(105%);opacity:0;pointer-events:none;}
 .mode-tabs{display:flex;gap:5px;}
 .mode-tab{
   flex:1;padding:8px 4px;border-radius:8px;border:1px solid var(--lapis);
@@ -594,9 +617,14 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
 <!-- ================= READER ================= -->
 <div id="readerView" class="hidden theme-light">
   <div class="reader-topbar">
-    <button class="btn ghost small" id="btnBack">→ بازگشت</button>
-    <div class="menu-wrap">
-      <button class="circle-btn" id="btnMenuToggle" title="امکانات">☰</button>
+    <button class="btn ghost small reader-back" id="btnBack">→ بازگشت</button>
+    <div class="reader-titlebar" aria-live="polite">
+      <div class="book-title" id="readerBookTitle">کتاب</div>
+      <div class="book-page" id="readerTopPage">پیوسته</div>
+    </div>
+    <div class="reader-actions">
+      <div class="menu-wrap">
+        <button class="circle-btn" id="btnMenuToggle" title="امکانات">☰</button>
       <div class="menu-dropdown hidden" id="menuDropdown">
 
         <div class="menu-section">
@@ -646,9 +674,9 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
         </div>
 
       </div>
-    </div>
-    <div class="search-wrap">
-      <button class="circle-btn" id="btnSearchToggle" title="جستجو">
+      </div>
+      <div class="search-wrap">
+        <button class="circle-btn" id="btnSearchToggle" title="جستجو">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </button>
       <div class="search-dropdown hidden" id="searchDropdown">
@@ -662,8 +690,9 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
           <button class="icon-btn" id="prevMatch">↑</button>
           <button class="icon-btn" id="nextMatch">↓</button>
         </div>
+        </div>
+        <div class="book-search-results hidden" id="bookSearchResults"></div>
       </div>
-      <div class="book-search-results hidden" id="bookSearchResults"></div>
     </div>
   </div>
   <div class="progress-outer"><div class="progress-inner" id="progressBar"></div></div>
@@ -692,9 +721,9 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
       </div>
     </div>
     <div class="pagi-page-controls" id="pagiPageControls">
-      <button id="pagiPrev">›</button>
+      <button id="pagiPrev" aria-label="صفحه‌ی قبلی">‹</button>
       <span id="pagiLabel">صفحه ۱ از ۱</span>
-      <button id="pagiNext">‹</button>
+      <button id="pagiNext" aria-label="صفحه‌ی بعدی">›</button>
       <div class="pagi-jump">
         <input type="number" id="pagiJumpInput" min="1" placeholder="#" inputmode="numeric">
         <button id="pagiJumpBtn">برو</button>
@@ -747,19 +776,26 @@ function saveSettings(s){ safeSetItem(SETTINGS_KEY, JSON.stringify(s)); }
 /* ---------------- book content storage: IndexedDB (large quota) with localStorage fallback ---------------- */
 const IDB_NAME = 'ketabkhanDB';
 const IDB_STORE = 'bookContent';
+const IDB_CHUNK_STORE = 'bookContentChunks';
+const IDB_VERSION = 2;
+const CONTENT_CHUNK_SIZE = 512 * 1024; // characters; keeps large books out of one giant IDB record
 let idbPromise = null;
 function openIDB(){
   if(idbPromise) return idbPromise;
   idbPromise = new Promise((resolve, reject)=>{
     if(!window.indexedDB){ reject(new Error('no indexeddb')); return; }
-    const req = indexedDB.open(IDB_NAME, 1);
-    req.onupgradeneeded = ()=>{ req.result.createObjectStore(IDB_STORE); };
+    const req = indexedDB.open(IDB_NAME, IDB_VERSION);
+    req.onupgradeneeded = ()=>{
+      const db = req.result;
+      if(!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+      if(!db.objectStoreNames.contains(IDB_CHUNK_STORE)) db.createObjectStore(IDB_CHUNK_STORE);
+    };
     req.onsuccess = ()=>resolve(req.result);
     req.onerror = ()=>reject(req.error);
   });
   return idbPromise;
 }
-async function idbGet(id){
+async function idbGetLegacy(id){
   const db = await openIDB();
   return new Promise((resolve,reject)=>{
     const tx = db.transaction(IDB_STORE, 'readonly');
@@ -768,38 +804,71 @@ async function idbGet(id){
     req.onerror = ()=>reject(req.error);
   });
 }
-async function idbSet(id, text){
+async function idbGetChunks(id){
   const db = await openIDB();
   return new Promise((resolve,reject)=>{
-    const tx = db.transaction(IDB_STORE, 'readwrite');
-    tx.objectStore(IDB_STORE).put(text, id);
+    const tx = db.transaction(IDB_CHUNK_STORE, 'readonly');
+    const store = tx.objectStore(IDB_CHUNK_STORE);
+    const metaReq = store.get(id + ':meta');
+    metaReq.onsuccess = ()=>{
+      const meta = metaReq.result;
+      if(!meta) { resolve(null); return; }
+      const parts = new Array(meta.count);
+      let done = 0;
+      for(let i=0;i<meta.count;i++){
+        const req = store.get(id + ':' + i);
+        req.onsuccess = ()=>{ parts[i] = req.result || ''; if(++done===meta.count) resolve(parts.join('')); };
+        req.onerror = ()=>reject(req.error);
+      }
+    };
+    metaReq.onerror = ()=>reject(metaReq.error);
+  });
+}
+async function idbSetChunks(id, text){
+  const db = await openIDB();
+  return new Promise((resolve,reject)=>{
+    const tx = db.transaction(IDB_CHUNK_STORE, 'readwrite');
+    const store = tx.objectStore(IDB_CHUNK_STORE);
+    const count = Math.max(1, Math.ceil(text.length / CONTENT_CHUNK_SIZE));
+    store.put({count, length:text.length, version:2}, id + ':meta');
+    for(let i=0;i<count;i++) store.put(text.slice(i*CONTENT_CHUNK_SIZE, (i+1)*CONTENT_CHUNK_SIZE), id + ':' + i);
     tx.oncomplete = ()=>resolve(true);
     tx.onerror = ()=>reject(tx.error);
+    tx.onabort = ()=>reject(tx.error || new Error('IndexedDB transaction aborted'));
   });
 }
 async function idbDelete(id){
   try{
     const db = await openIDB();
-    const tx = db.transaction(IDB_STORE, 'readwrite');
+    const tx = db.transaction([IDB_STORE, IDB_CHUNK_STORE], 'readwrite');
     tx.objectStore(IDB_STORE).delete(id);
+    const store = tx.objectStore(IDB_CHUNK_STORE);
+    const metaReq = store.get(id + ':meta');
+    metaReq.onsuccess = ()=>{
+      const meta = metaReq.result;
+      store.delete(id + ':meta');
+      if(meta) for(let i=0;i<meta.count;i++) store.delete(id + ':' + i);
+    };
   }catch(e){ /* ignore */ }
 }
 async function getContent(id){
-  // legacy books saved before the IndexedDB upgrade still live in localStorage — check there first
-  const legacy = localStorage.getItem(contentKey(id));
-  if(legacy!==null) return legacy;
+  const legacyLS = localStorage.getItem(contentKey(id));
+  if(legacyLS!==null) return legacyLS;
   try{
-    const v = await idbGet(id);
-    return v || '';
+    const chunked = await idbGetChunks(id);
+    if(chunked!==null) return chunked;
+    const legacyIDB = await idbGetLegacy(id);
+    return legacyIDB || '';
   }catch(e){ return ''; }
 }
 async function setContent(id, text){
   try{
-    await idbSet(id, text);
-    localStorage.removeItem(contentKey(id)); // ensure no stale duplicate in localStorage
+    await idbSetChunks(id, text);
+    localStorage.removeItem(contentKey(id));
     return true;
   }catch(e){
-    // IndexedDB unavailable/failed — fall back to localStorage (subject to its smaller quota)
+    // localStorage is kept only as a small-book compatibility fallback.
+    if(text.length > CONTENT_CHUNK_SIZE * 8) return false;
     return safeSetItem(contentKey(id), text);
   }
 }
@@ -1170,7 +1239,7 @@ async function extractTextFromPdf(file){
       .filter(Boolean);
     pageTexts.push(pageLines.join('\n'));
   }
-  return pageTexts.filter(Boolean).join('\n\n');
+  return pageTexts.filter(Boolean).join('\n\n===\n\n');
 }
 
 async function extractTextFromDocx(file){
@@ -1273,10 +1342,11 @@ document.getElementById('importFileInput').addEventListener('change', async (e)=
     if(!data.library) throw new Error('bad file');
     const existingIds = new Set(library.map(b=>b.id));
     for(const b of data.library){
+      const oldId = b.id;
       if(existingIds.has(b.id)) b.id = uid('b');
       library.push(b);
-      if(data.contents && data.contents[b.id]) await setContent(b.id, data.contents[b.id]);
-      if(data.states && data.states[b.id]) saveBookState(b.id, data.states[b.id]);
+      if(data.contents && Object.prototype.hasOwnProperty.call(data.contents, oldId)) await setContent(b.id, data.contents[oldId]);
+      if(data.states && Object.prototype.hasOwnProperty.call(data.states, oldId)) saveBookState(b.id, data.states[oldId]);
     }
     saveLibrary(library);
     renderLibrary();
@@ -1293,6 +1363,13 @@ const contentWrap = document.getElementById('contentWrap');
 const readerContent = document.getElementById('readerContent');
 const progressBar = document.getElementById('progressBar');
 const sidePanel = document.getElementById('sidePanel');
+const readerBookTitle = document.getElementById('readerBookTitle');
+const readerTopPage = document.getElementById('readerTopPage');
+function updateReaderTopInfo(page, total){
+  const book = currentBook();
+  if(book) readerBookTitle.textContent = book.title || 'کتاب';
+  readerTopPage.textContent = total ? `صفحه ${page} از ${total}` : 'پیوسته';
+}
 
 function currentBook(){ return library.find(b=>b.id===currentBookId); }
 
@@ -1316,6 +1393,8 @@ async function openBook(id){
     mode = 'scroll';
     toast('این کتاب حجیم است؛ برای روانی بیشتر در حالت پیوسته باز می‌شود');
   }
+  readerBookTitle.textContent = book.title || 'کتاب';
+  updateReaderTopInfo(1, null);
   document.getElementById('fontFamilySel').value = fam;
   document.getElementById('fsVal').textContent = size;
   readerContent.style.fontFamily = fam;
@@ -1398,8 +1477,7 @@ function renderReaderContent(){
   }
   const st = getBookState(currentBookId);
   const book = currentBook();
-  let html = `<div class="reader-meta-title">${escapeHtml(book.title)}</div>`;
-  if(book.author) html += `<div class="reader-meta-author">${escapeHtml(book.author)}</div>`;
+  let html = '';
   currentParagraphs.forEach((p, i)=>{
     html += `<p data-pindex="${i}">${renderParagraphHTML(p, i, st.highlights)}</p>`;
   });
@@ -1434,10 +1512,6 @@ function renderPrintedPage(idx){
   const st = getBookState(currentBookId);
   const book = currentBook();
   let html = '';
-  if(idx===0){
-    html += `<div class="reader-meta-title">${escapeHtml(book.title)}</div>`;
-    if(book.author) html += `<div class="reader-meta-author">${escapeHtml(book.author)}</div>`;
-  }
   for(let i=range.start;i<=range.end;i++){
     html += `<p data-pindex="${i}">${renderParagraphHTML(currentParagraphs[i], i, st.highlights)}</p>`;
   }
@@ -1451,7 +1525,7 @@ function updateModeTabsUI(mode, hasMarkers){
   });
   const printedBtn = document.getElementById('modePrinted');
   printedBtn.disabled = !hasMarkers;
-  printedBtn.title = hasMarkers ? '' : 'برای این حالت باید در متن کتاب، پایان هر صفحه را با یک خط جداگانه شامل === مشخص کرده باشید';
+  printedBtn.title = hasMarkers ? '' : 'برای تطبیق دقیق، کتاب باید مرز صفحات را داشته باشد؛ PDF این مرزها را خودکار حفظ می‌کند';
 }
 
 function setReaderMode(mode, persist){
@@ -1462,7 +1536,7 @@ function setReaderMode(mode, persist){
   if(mode==='printed'){
     computePrintedPages();
     if(printedPages.length<=1 && !currentParagraphs.some(p=>/^={3,}$/.test(p.trim()))){
-      toast('برای این حالت، در متن کتاب پایان هر صفحه را با یک خط جدا شامل === مشخص کنید');
+      toast('برای تطبیق دقیق با چاپ، مرز صفحات لازم است؛ برای PDF این مرزها خودکار وارد می‌شوند');
       return;
     }
   }
@@ -1486,6 +1560,7 @@ function setReaderMode(mode, persist){
     const page = Math.round(scrollFracBefore*(printedPages.length-1));
     goToPage(Math.min(Math.max(0,page), printedPages.length-1), false);
   } else {
+    updateReaderTopInfo(1, null);
     renderReaderContent();
     requestAnimationFrame(()=>{
       const max = contentWrap.scrollHeight - contentWrap.clientHeight;
@@ -1535,6 +1610,7 @@ function goToPage(n, animate){
     pagi.totalPages = printedPages.length;
     renderPrintedPage(n);
     document.getElementById('pagiLabel').textContent = `صفحه ${n+1} از ${printedPages.length}`;
+    updateReaderTopInfo(n+1, printedPages.length);
     document.getElementById('pagiPrev').disabled = n<=0;
     document.getElementById('pagiNext').disabled = n>=printedPages.length-1;
     const pct2 = printedPages.length>1 ? (n/(printedPages.length-1))*100 : 0;
@@ -1552,6 +1628,7 @@ function goToPage(n, animate){
     readerContent.style.transition = '';
   }
   document.getElementById('pagiLabel').textContent = `صفحه ${n+1} از ${pagi.totalPages}`;
+  updateReaderTopInfo(n+1, pagi.totalPages);
   document.getElementById('pagiPrev').disabled = n<=0;
   document.getElementById('pagiNext').disabled = n>=pagi.totalPages-1;
   const pct = pagi.totalPages>1 ? (n/(pagi.totalPages-1))*100 : 0;
