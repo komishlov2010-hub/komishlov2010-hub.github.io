@@ -111,6 +111,30 @@ input,select,textarea{font-family:inherit;}
 .brand p{margin:2px 0 0;font-size:12.5px;color:var(--muted);letter-spacing:.3px;}
 
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.app-settings-strip{
+  display:flex;align-items:center;justify-content:flex-start;gap:18px;
+  direction:rtl;
+  margin:-8px 0 18px; padding:10px 14px;
+  background:linear-gradient(180deg,var(--ink-2),var(--ink));
+  border:1px solid var(--gold-dim); border-radius:12px;
+  box-shadow:0 8px 22px rgba(0,0,0,.16);
+}
+.app-settings-group{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.app-settings-label{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap;}
+.app-settings-strip .shell-switch{padding:0;}
+.app-settings-strip .shell-dot{width:26px;height:26px;}
+.app-language-select{
+  min-width:118px; background:var(--ink); border:1px solid var(--lapis);
+  color:var(--ink-text); padding:7px 10px; border-radius:8px; outline:none;
+}
+.app-language-select:focus{border-color:var(--gold);}
+@media(max-width:620px){
+  .app-settings-strip{justify-content:flex-start;gap:12px;padding:9px 10px;}
+  .app-settings-group{gap:7px;}
+  .app-settings-label{font-size:11px;}
+  .app-settings-strip .shell-dot{width:23px;height:23px;}
+  .app-language-select{min-width:105px;font-size:12px;}
+}
 .shell-switch{display:flex;gap:6px;align-items:center;padding-inline-end:6px;}
 .shell-dot{width:24px;height:24px;border-radius:50%;border:2px solid transparent;}
 .shell-dot[data-shell-choice=brown]{background:#2b1c12;border-color:#9b7941;}
@@ -567,6 +591,15 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
       </div>
     </div>
     <div class="toolbar">
+      <button class="btn ghost" id="btnImport" title="بازگردانی کتاب‌ها از یک فایل پشتیبان">⇧ ورود پشتیبان</button>
+      <button class="btn ghost" id="btnExport" title="دانلود یک فایل پشتیبان از همه‌ی کتاب‌ها برای محافظت در برابر پاک‌شدن حافظه‌ی مرورگر">⇩ خروجی پشتیبان</button>
+      <button class="btn primary" id="btnAddBook">＋ افزودن کتاب</button>
+    </div>
+  </div>
+
+  <div class="app-settings-strip" aria-label="تنظیمات نرم‌افزار">
+    <div class="app-settings-group">
+      <span class="app-settings-label">ظاهر نرم‌افزار</span>
       <div class="shell-switch" title="ظاهر نرم‌افزار">
         <button class="shell-dot" data-shell-choice="brown" title="قهوه‌ای کلاسیک"></button>
         <button class="shell-dot" data-shell-choice="paper" title="ورق کهنه — متن سیاه"></button>
@@ -576,9 +609,14 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
         <button class="shell-dot" data-shell-choice="burgundy" title="زرشکی اصیل"></button>
         <button class="shell-dot" data-shell-choice="espresso" title="قهوه‌ای اسپرسو"></button>
       </div>
-      <button class="btn ghost" id="btnImport" title="بازگردانی کتاب‌ها از یک فایل پشتیبان">⇧ ورود پشتیبان</button>
-      <button class="btn ghost" id="btnExport" title="دانلود یک فایل پشتیبان از همه‌ی کتاب‌ها برای محافظت در برابر پاک‌شدن حافظه‌ی مرورگر">⇩ خروجی پشتیبان</button>
-      <button class="btn primary" id="btnAddBook">＋ افزودن کتاب</button>
+    </div>
+    <div class="app-settings-group">
+      <span class="app-settings-label">زبان نرم‌افزار</span>
+      <select id="appLanguageSel" class="app-language-select" aria-label="زبان نرم‌افزار">
+        <option value="fa">فارسی</option>
+        <option value="ar">العربية</option>
+        <option value="tg">Тоҷикӣ</option>
+      </select>
     </div>
   </div>
 
@@ -813,8 +851,44 @@ const SETTINGS_KEY = 'ketabkhan_settings_v1';
 const contentKey = id => 'ketabkhan_content_' + id;
 const stateKey = id => 'ketabkhan_bookstate_' + id;
 
+function normalizeFolderName(value){
+  return String(value ?? '')
+    .normalize('NFC')
+    .replace(/[يى]/g,'ی')
+    .replace(/ك/g,'ک')
+    .replace(/[\u200c\u200d\u2060]/g,'')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+const FOLDER_ALIASES = {
+  'تفسير':'تفسیر','تفسير ':'تفسیر',
+  'حديث':'حدیث','حديث ':'حدیث',
+  'ادبيات':'ادبیات','تاريخ':'تاریخ'
+};
+function canonicalFolderName(value){
+  const n = normalizeFolderName(value);
+  return FOLDER_ALIASES[n] || n;
+}
+function getBookFolder(book){
+  if(!book) return '';
+  return canonicalFolderName(book.category ?? book.folder ?? book.folderName ?? book.categoryName ?? book.group ?? book.collection ?? '');
+}
 function loadLibrary(){
-  try{ return JSON.parse(localStorage.getItem(LIB_KEY)) || []; }catch(e){ return []; }
+  try{
+    const raw = JSON.parse(localStorage.getItem(LIB_KEY)) || [];
+    if(!Array.isArray(raw)) return [];
+    let changed = false;
+    const migrated = raw.map(b=>{
+      const folder = getBookFolder(b);
+      if(canonicalFolderName(b.category || '') !== folder){ changed = true; }
+      if((b.category ?? '') !== folder){ changed = true; return Object.assign({}, b, {category: folder}); }
+      return b;
+    });
+    if(changed){
+      try{ localStorage.setItem(LIB_KEY, JSON.stringify(migrated)); }catch(e){}
+    }
+    return migrated;
+  }catch(e){ return []; }
 }
 function safeSetItem(key, value){
   try{
@@ -1025,8 +1099,8 @@ async function filteredSortedBooks(){
 
   const flags = await Promise.all(library.map(async b=>{
     if(!q && currentFolder!==null){
-      const cat = String(b.category || '').trim().normalize('NFC');
-      const wanted = String(currentFolder || '').trim().normalize('NFC');
+      const cat = getBookFolder(b);
+      const wanted = canonicalFolderName(currentFolder);
       if(cat !== wanted) return false;
     }
     if(activeTagFilter && !(b.tags||[]).includes(activeTagFilter)) return false;
@@ -1056,8 +1130,8 @@ function renderFolderOverview(){
   const grid = document.createElement('div');
   grid.className = 'grid folders-grid';
   const countFor = (cat)=>{
-    const wanted = String(cat || '').trim().normalize('NFC');
-    return library.filter(b=>String(b.category || '').trim().normalize('NFC')===wanted).length;
+    const wanted = canonicalFolderName(cat);
+    return library.filter(b=>getBookFolder(b)===wanted).length;
   };
   const items = Array.from(new Set(allFolders())).map(c=>({key:c,label:c,count:countFor(c)}));
   items.push({key:'', label:'بدون پوشه', count:countFor('')});
@@ -1070,7 +1144,7 @@ function renderFolderOverview(){
       <div class="folder-count">${it.count} کتاب</div>
     `;
     card.onclick = ()=>{
-      currentFolder = it.key;
+      currentFolder = canonicalFolderName(it.key);
       activeTagFilter = null;
       const search = document.getElementById('searchInput');
       if(search) search.value = '';
@@ -1183,7 +1257,11 @@ function openMoveMenu(book, anchorEl){
   const menu = document.createElement('div');
   menu.className = 'move-menu';
   const options = [{key:'', label:'بدون پوشه'}].concat(allFolders().map(c=>({key:c,label:c})));
-  menu.innerHTML = options.map(o=>`<div class="move-menu-item" data-key="${escapeHtml(o.key)}">${o.key===((book.category)||'') ? '✓ ' : ''}${escapeHtml(o.label)}</div>`).join('');
+  const currentCat = getBookFolder(book);
+  menu.innerHTML = options.map(o=>{
+    const key = canonicalFolderName(o.key);
+    return `<div class="move-menu-item" data-key="${escapeHtml(key)}">${key===currentCat ? '✓ ' : ''}${escapeHtml(o.label)}</div>`;
+  }).join('');
   document.body.appendChild(menu);
   const rect = anchorEl.getBoundingClientRect();
   menu.style.position = 'fixed';
@@ -1352,7 +1430,7 @@ document.getElementById('saveBook').onclick = async ()=>{
   const title = document.getElementById('fTitle').value.trim();
   const author = document.getElementById('fAuthor').value.trim();
   const tags = document.getElementById('fTags').value.split(',').map(s=>s.trim()).filter(Boolean);
-  const category = document.getElementById('fCategory').value;
+  const category = canonicalFolderName(document.getElementById('fCategory').value);
   const coverFile = document.getElementById('fCover').files[0];
 
   if(!title){ toast('لطفاً عنوان کتاب را وارد کنید'); return; }
@@ -2583,7 +2661,14 @@ function applyLanguage(lang,persist){
   if(!I18N[lang]) lang='fa';
   translateKnownUI(lang);
   const sel=document.getElementById('languageSel'); if(sel) sel.value=lang;
+  const appSel=document.getElementById('appLanguageSel'); if(appSel) appSel.value=lang;
   if(persist){settings.language=lang; saveSettings(settings);}
+}
+
+const appLanguageSel = document.getElementById('appLanguageSel');
+if(appLanguageSel){
+  appLanguageSel.value = settings.language || 'fa';
+  appLanguageSel.addEventListener('change', ()=>applyLanguage(appLanguageSel.value, true));
 }
 
 /* ---------------- init ---------------- */
