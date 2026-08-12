@@ -38,43 +38,35 @@
   --font-ui:'Noto Naskh Arabic',serif;
 }
 html[data-shell="paper"]{
-  --ink:#efe6d0;
-  --ink-2:#e6d9b7;
-  --ink-3:#ddcda1;
-  --lapis:#c3b184;
-  --gold:#9c7a2e;
-  --gold-soft:#b38f3c;
-  --gold-dim:rgba(156,122,46,.35);
-  --ink-text:#3c2d15;
-  --muted:#6e5c38;
-  --shadow: 0 8px 22px rgba(60,45,21,.18);
+  /* کاغذ کهنه: پس‌زمینه‌ی گرم، اما نوشته‌های نرم‌افزار کاملاً تیره و خوانا */
+  --ink:#eee4c9; --ink-2:#e4d6b4; --ink-3:#d5c39a; --lapis:#ad9a70;
+  --gold:#8b6724; --gold-soft:#a67d2d; --gold-dim:rgba(108,78,25,.30);
+  --ink-text:#11100d; --muted:#403a2f; --shadow:0 10px 28px rgba(58,45,20,.18);
 }
-html[data-shell="green"]{
-  --ink:#e9efe4;
-  --ink-2:#dde7d5;
-  --ink-3:#cddabf;
-  --lapis:#a9bd98;
-  --gold:#5c7a3a;
-  --gold-soft:#71934a;
-  --gold-dim:rgba(92,122,58,.32);
-  --ink-text:#28331c;
-  --muted:#5a6b48;
-  --shadow: 0 8px 22px rgba(30,40,15,.16);
+html[data-shell="forest"]{
+  --ink:#111b17; --ink-2:#18261f; --ink-3:#21342a; --lapis:#405d4d;
+  --gold:#b8944f; --gold-soft:#d2b36e; --gold-dim:rgba(184,148,79,.30);
+  --ink-text:#f1eee5; --muted:#b7b1a3; --shadow:0 12px 30px rgba(0,0,0,.40);
 }
 html[data-shell="midnight"]{
-  --ink:#151a24;--ink-2:#1e2634;--ink-3:#273245;--lapis:#3f536f;
-  --gold:#8bb8d9;--gold-soft:#b9d9ef;--gold-dim:rgba(139,184,217,.32);
-  --ink-text:#e8eef6;--muted:#9db0c6;--shadow:0 10px 30px rgba(0,0,0,.38);
+  --ink:#0f1622; --ink-2:#172234; --ink-3:#203047; --lapis:#405773;
+  --gold:#c5a15a; --gold-soft:#e0c27c; --gold-dim:rgba(197,161,90,.30);
+  --ink-text:#eef2f7; --muted:#aab6c5; --shadow:0 12px 32px rgba(0,0,0,.45);
 }
-html[data-shell="plum"]{
-  --ink:#241a29;--ink-2:#302038;--ink-3:#3b2946;--lapis:#644b72;
-  --gold:#caa4e8;--gold-soft:#e1c7f3;--gold-dim:rgba(202,164,232,.30);
-  --ink-text:#f1e8f6;--muted:#c0a9c9;--shadow:0 10px 30px rgba(25,10,30,.38);
+html[data-shell="graphite"]{
+  --ink:#151617; --ink-2:#1e2022; --ink-3:#292c2f; --lapis:#4b5054;
+  --gold:#b79a5b; --gold-soft:#d6bc7e; --gold-dim:rgba(183,154,91,.28);
+  --ink-text:#f0eee9; --muted:#b4b0a7; --shadow:0 12px 30px rgba(0,0,0,.44);
 }
 html[data-shell="burgundy"]{
-  --ink:#2b1519;--ink-2:#3a1d22;--ink-3:#4a252c;--lapis:#70414a;
-  --gold:#d6a56f;--gold-soft:#ecc58e;--gold-dim:rgba(214,165,111,.30);
-  --ink-text:#f4e7df;--muted:#c9a99a;--shadow:0 10px 30px rgba(35,8,12,.38);
+  --ink:#241214; --ink-2:#32191d; --ink-3:#432126; --lapis:#67414a;
+  --gold:#c39a57; --gold-soft:#e0bd78; --gold-dim:rgba(195,154,87,.30);
+  --ink-text:#f5eee8; --muted:#c8b2a7; --shadow:0 12px 32px rgba(28,5,8,.42);
+}
+html[data-shell="espresso"]{
+  --ink:#1c130f; --ink-2:#281b15; --ink-3:#38261b; --lapis:#624a37;
+  --gold:#c39a52; --gold-soft:#dfbd75; --gold-dim:rgba(195,154,82,.30);
+  --ink-text:#f3eee4; --muted:#c5b9a8; --shadow:0 12px 30px rgba(15,7,3,.44);
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;height:100%;}
@@ -121,12 +113,13 @@ input,select,textarea{font-family:inherit;}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
 .shell-switch{display:flex;gap:6px;align-items:center;padding-inline-end:6px;}
 .shell-dot{width:24px;height:24px;border-radius:50%;border:2px solid transparent;}
-.shell-dot[data-shell-choice=brown]{background:#2b1c12;}
-.shell-dot[data-shell-choice=paper]{background:#efe6d0;border-color:#c9b98a;}
-.shell-dot[data-shell-choice=green]{background:#dde7d5;border-color:#a9bd98;}
-.shell-dot[data-shell-choice=midnight]{background:#243149;border-color:#8bb8d9;}
-.shell-dot[data-shell-choice=plum]{background:#3b2946;border-color:#caa4e8;}
-.shell-dot[data-shell-choice=burgundy]{background:#4a252c;border-color:#d6a56f;}
+.shell-dot[data-shell-choice=brown]{background:#2b1c12;border-color:#9b7941;}
+.shell-dot[data-shell-choice=paper]{background:#eee4c9;border-color:#ad9a70;}
+.shell-dot[data-shell-choice=forest]{background:#18261f;border-color:#b8944f;}
+.shell-dot[data-shell-choice=midnight]{background:#172234;border-color:#c5a15a;}
+.shell-dot[data-shell-choice=graphite]{background:#1e2022;border-color:#b79a5b;}
+.shell-dot[data-shell-choice=burgundy]{background:#32191d;border-color:#c39a57;}
+.shell-dot[data-shell-choice=espresso]{background:#281b15;border-color:#c39a52;}
 .shell-dot.active{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-dim);}
 .btn{
   border:1px solid var(--gold-dim);
@@ -320,6 +313,8 @@ input,select,textarea{font-family:inherit;}
 .theme-dot[data-theme=aged2]{background:#d8c28f;}
 .theme-dot[data-theme=rose]{background:#ead9d4;}
 .theme-dot[data-theme=sage]{background:#dfe7d9;}
+.theme-dot[data-theme=ink]{background:#e5e0d4;}
+.theme-dot[data-theme=olive]{background:#d9dcc9;}
 .theme-dot.active{border-color:var(--gold);}
 
 .menu-wrap{position:relative;}
@@ -493,12 +488,16 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
 .theme-parchment .reader-meta-author{color:#725c34;}
 .theme-ivory .reader-content-wrap{background:#faf7ed;color:#302c23;}
 .theme-ivory .reader-meta-author{color:#716a5d;}
-.theme-aged2 .reader-content-wrap{background:#d8c28f;color:#3d2a10;background-image:radial-gradient(circle at 20% 15%,rgba(120,75,20,.12),transparent 35%),radial-gradient(circle at 80% 70%,rgba(90,55,15,.10),transparent 40%);}
+.theme-aged2 .reader-content-wrap{background:#d8c28f;color:#17130d;background-image:radial-gradient(circle at 20% 15%,rgba(120,75,20,.12),transparent 35%),radial-gradient(circle at 80% 70%,rgba(90,55,15,.10),transparent 40%);}
 .theme-aged2 .reader-meta-author{color:#6d4d21;}
 .theme-rose .reader-content-wrap{background:#ead9d4;color:#3b2927;}
 .theme-rose .reader-meta-author{color:#765b56;}
 .theme-sage .reader-content-wrap{background:#dfe7d9;color:#293127;}
 .theme-sage .reader-meta-author{color:#5b6955;}
+.theme-ink .reader-content-wrap{background:#e5e0d4;color:#161616;}
+.theme-ink .reader-meta-author{color:#4b4b46;}
+.theme-olive .reader-content-wrap{background:#d9dcc9;color:#202218;}
+.theme-olive .reader-meta-author{color:#4d543e;}
 .theme-light .reader-content-wrap{background:var(--parchment);color:#2c2410;}
 .theme-light .reader-meta-author{color:#7a6c47;}
 .theme-sepia .reader-content-wrap{background:var(--sepia);color:#3a2c12;}
@@ -511,7 +510,7 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
     radial-gradient(circle at 80% 70%, rgba(120,95,50,.08), transparent 45%),
     radial-gradient(circle at 60% 15%, rgba(90,70,35,.06), transparent 35%),
     #decda1;
-  color:#3c2f18;
+  color:#17130d;
 }
 .theme-aged .reader-meta-author{color:#6e5c34;}
 .theme-green .reader-content-wrap{background:#e2ecdd;color:#28331f;}
@@ -569,12 +568,13 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
     </div>
     <div class="toolbar">
       <div class="shell-switch" title="ظاهر نرم‌افزار">
-        <button class="shell-dot" data-shell-choice="brown" title="قهوه‌ای"></button>
-        <button class="shell-dot" data-shell-choice="paper" title="ورق کهنه"></button>
-        <button class="shell-dot" data-shell-choice="green" title="سبز روشن"></button>
-        <button class="shell-dot" data-shell-choice="midnight" title="شب آبی"></button>
-        <button class="shell-dot" data-shell-choice="plum" title="بنفش سلطنتی"></button>
-        <button class="shell-dot" data-shell-choice="burgundy" title="زرشکی"></button>
+        <button class="shell-dot" data-shell-choice="brown" title="قهوه‌ای کلاسیک"></button>
+        <button class="shell-dot" data-shell-choice="paper" title="ورق کهنه — متن سیاه"></button>
+        <button class="shell-dot" data-shell-choice="forest" title="سبز جنگلی"></button>
+        <button class="shell-dot" data-shell-choice="midnight" title="سرمه‌ای عمیق"></button>
+        <button class="shell-dot" data-shell-choice="graphite" title="گرافیتی"></button>
+        <button class="shell-dot" data-shell-choice="burgundy" title="زرشکی اصیل"></button>
+        <button class="shell-dot" data-shell-choice="espresso" title="قهوه‌ای اسپرسو"></button>
       </div>
       <button class="btn ghost" id="btnImport" title="بازگردانی کتاب‌ها از یک فایل پشتیبان">⇧ ورود پشتیبان</button>
       <button class="btn ghost" id="btnExport" title="دانلود یک فایل پشتیبان از همه‌ی کتاب‌ها برای محافظت در برابر پاک‌شدن حافظه‌ی مرورگر">⇩ خروجی پشتیبان</button>
@@ -701,8 +701,8 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
               <button class="theme-dot" data-theme="parchment" title="کاغذ گرم"></button>
               <button class="theme-dot" data-theme="ivory" title="عاجی"></button>
               <button class="theme-dot" data-theme="aged2" title="ورق کهنه"></button>
-              <button class="theme-dot" data-theme="rose" title="رز ملایم"></button>
-              <button class="theme-dot" data-theme="sage" title="سبز کاغذی"></button>
+              <button class="theme-dot" data-theme="ink" title="جوهر و کاغذ"></button>
+              <button class="theme-dot" data-theme="olive" title="زیتونی کلاسیک"></button>
             </div>
           </div>
           <div class="settings-row">
@@ -1025,8 +1025,9 @@ async function filteredSortedBooks(){
 
   const flags = await Promise.all(library.map(async b=>{
     if(!q && currentFolder!==null){
-      const cat = b.category || '';
-      if(cat !== currentFolder) return false;
+      const cat = String(b.category || '').trim().normalize('NFC');
+      const wanted = String(currentFolder || '').trim().normalize('NFC');
+      if(cat !== wanted) return false;
     }
     if(activeTagFilter && !(b.tags||[]).includes(activeTagFilter)) return false;
     if(!q) return true;
@@ -1054,8 +1055,11 @@ async function filteredSortedBooks(){
 function renderFolderOverview(){
   const grid = document.createElement('div');
   grid.className = 'grid folders-grid';
-  const countFor = (cat)=> library.filter(b=>(b.category||'')===cat).length;
-  const items = allFolders().map(c=>({key:c,label:c,count:countFor(c)}));
+  const countFor = (cat)=>{
+    const wanted = String(cat || '').trim().normalize('NFC');
+    return library.filter(b=>String(b.category || '').trim().normalize('NFC')===wanted).length;
+  };
+  const items = Array.from(new Set(allFolders())).map(c=>({key:c,label:c,count:countFor(c)}));
   items.push({key:'', label:'بدون پوشه', count:countFor('')});
   items.forEach(it=>{
     const card = document.createElement('div');
@@ -1065,7 +1069,15 @@ function renderFolderOverview(){
       <div class="folder-name">${escapeHtml(it.label)}</div>
       <div class="folder-count">${it.count} کتاب</div>
     `;
-    card.onclick = ()=>{ currentFolder = it.key; renderLibrary(); };
+    card.onclick = ()=>{
+      currentFolder = it.key;
+      activeTagFilter = null;
+      const search = document.getElementById('searchInput');
+      if(search) search.value = '';
+      const deep = document.getElementById('deepSearchChk');
+      if(deep) deep.checked = false;
+      renderLibrary();
+    };
     grid.appendChild(card);
   });
   const addCard = document.createElement('div');
@@ -1111,7 +1123,12 @@ async function renderLibrary(){
     header.className = 'folder-header';
     header.innerHTML = `<button class="btn ghost small" id="btnBackToFolders">→ بازگشت به پوشه‌ها</button><h3>${escapeHtml(currentFolder || 'بدون پوشه')}</h3>`;
     gridContainer.appendChild(header);
-    header.querySelector('#btnBackToFolders').onclick = ()=>{ currentFolder = null; renderLibrary(); };
+    header.querySelector('#btnBackToFolders').onclick = ()=>{
+      currentFolder = null;
+      activeTagFilter = null;
+      const search = document.getElementById('searchInput'); if(search) search.value='';
+      renderLibrary();
+    };
   }
 
   const list = await filteredSortedBooks();
@@ -2549,8 +2566,8 @@ const I18N={
   tg:{name:'Тоҷикӣ',dir:'ltr',title:'Китобхонаи ман | ketabkhan'}
 };
 const UI_TRANSLATIONS={
-  ar:{'بازگشت':'رجوع','امکانات':'الخيارات','جستجو':'بحث','تنظیمات':'الإعدادات','قلم':'الخط','اندازه‌ی حروف':'حجم الحروف','پوسته‌ی رنگی':'ألوان القراءة','زبان نرم‌افزار':'لغة البرنامج','حالت نمایش':'وضع العرض','پیوسته':'متواصل','صفحه‌ای':'صفحات','مطابق چاپی':'مطابق للطباعة','PDF اصلی':'PDF الأصلي','ثبت نشانه در اینجا':'إضافة علامة هنا','نشانه‌ها و یادداشت‌ها':'العلامات والملاحظات','اشتراک‌گذاری با دیگران':'مشاركة الكتاب','همه‌ی کتاب‌ها':'كل الكتب','این کتاب':'هذا الكتاب','ورق کهنه':'ورق قديم','روشن':'فاتح','تیره':'داكن','سبز روشن':'أخضر فاتح','شب آبی':'ليلي أزرق','بنفش سلطنتی':'بنفسجي ملكي','زرشکی':'عنابي'},
-  tg:{'بازگشت':'Бозгашт','امکانات':'Имконот','جستجو':'Ҷустуҷӯ','تنظیمات':'Танзимот','قلم':'Ҳуруф','اندازه‌ی حروف':'Андозаи ҳарф','پوسته‌ی رنگی':'Рангҳои хондан','زبان نرم‌افزار':'Забони барнома','حالت نمایش':'Ҳолати намоиш','پیوسته':'Пайваста','صفحه‌ای':'Саҳифаҳо','مطابق چاپی':'Мувофиқи чоп','PDF اصلی':'PDF аслӣ','ثبت نشانه در اینجا':'Нишона гузоштан','نشانه‌ها و یادداشت‌ها':'Нишонаҳо ва ёддоштҳо','اشتراک‌گذاری با دیگران':'Мубодила','همه‌ی کتاب‌ها':'Ҳамаи китобҳо','این کتاب':'Ин китоб','ورق کهنه':'Варақи кӯҳна','روشن':'Равшан','تیره':'Торик','سبز روشن':'Сабзи равшан','شب آبی':'Шаби кабуд','بنفش سلطنتی':'Бунафши шоҳона','زرشکی':'Бургундӣ'}
+  ar:{'بازگشت':'رجوع','امکانات':'الخيارات','جستجو':'بحث','تنظیمات':'الإعدادات','قلم':'الخط','اندازه‌ی حروف':'حجم الحروف','پوسته‌ی رنگی':'ألوان القراءة','زبان نرم‌افزار':'لغة البرنامج','حالت نمایش':'وضع العرض','پیوسته':'متواصل','صفحه‌ای':'صفحات','مطابق چاپی':'مطابق للطباعة','PDF اصلی':'PDF الأصلي','ثبت نشانه در اینجا':'إضافة علامة هنا','نشانه‌ها و یادداشت‌ها':'العلامات والملاحظات','اشتراک‌گذاری با دیگران':'مشاركة الكتاب','همه‌ی کتاب‌ها':'كل الكتب','این کتاب':'هذا الكتاب','ورق کهنه':'ورق قديم','جوهر و کاغذ':'حبر وورق','زیتونی کلاسیک':'زيتوني كلاسيكي','روشن':'فاتح','تیره':'داكن','سبز روشن':'أخضر فاتح','شب آبی':'ليلي أزرق','بنفش سلطنتی':'بنفسجي ملكي','زرشکی':'عنابي'},
+  tg:{'بازگشت':'Бозгашт','امکانات':'Имконот','جستجو':'Ҷустуҷӯ','تنظیمات':'Танзимот','قلم':'Ҳуруф','اندازه‌ی حروف':'Андозаи ҳарф','پوسته‌ی رنگی':'Рангҳои хондан','زبان نرم‌افزار':'Забони барнома','حالت نمایش':'Ҳолати намоиш','پیوسته':'Пайваста','صفحه‌ای':'Саҳифаҳо','مطابق چاپی':'Мувофиқи чоп','PDF اصلی':'PDF аслӣ','ثبت نشانه در اینجا':'Нишона гузоштан','نشانه‌ها و یادداشت‌ها':'Нишонаҳо ва ёддоштҳо','اشتراک‌گذاری با دیگران':'Мубодила','همه‌ی کتاب‌ها':'Ҳамаи китобҳо','این کتاب':'Ин китоб','ورق کهنه':'Варақи кӯҳна','جوهر و کاغذ':'Сиёҳ ва коғаз','زیتونی کلاسیک':'Зайтунии классикӣ','روشن':'Равшан','تیره':'Торик','سبز روشن':'Сабзи равшан','شب آبی':'Шаби кабуд','بنفش سلطنتی':'Бунафши шоҳона','زرشکی':'Бургундӣ'}
 };
 function translateKnownUI(lang){
   const dict=UI_TRANSLATIONS[lang]||{};
@@ -2571,14 +2588,18 @@ function applyLanguage(lang,persist){
 
 /* ---------------- init ---------------- */
 function applyShellTheme(shell){
+  const legacyMap = {green:'forest', plum:'graphite'};
+  shell = legacyMap[shell] || shell;
+  if(!['brown','paper','forest','midnight','graphite','burgundy','espresso'].includes(shell)) shell='brown';
+  settings.appShell = shell;
   document.documentElement.setAttribute('data-shell', shell);
   document.querySelectorAll('.shell-dot').forEach(d=>d.classList.toggle('active', d.dataset.shellChoice===shell));
 }
 document.querySelectorAll('.shell-dot').forEach(d=>{
   d.onclick = ()=>{
     settings.appShell = d.dataset.shellChoice;
-    saveSettings(settings);
     applyShellTheme(settings.appShell);
+    saveSettings(settings);
   };
 });
 applyShellTheme(settings.appShell || 'brown');
