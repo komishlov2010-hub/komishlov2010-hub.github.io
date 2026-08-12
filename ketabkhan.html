@@ -2356,9 +2356,40 @@ applyShellTheme(settings.appShell || 'brown');
 
 renderLibrary();
 
+/* ---------------- service-worker cache recovery ----------------
+   Keep the reader usable after GitHub Pages deployments.  Older sw.js files
+   can otherwise keep serving a stale ketabkhan.html indefinitely.  This
+   one-time recovery unregisters an existing controller, clears only Cache
+   Storage (not IndexedDB/localStorage where books and reading state live),
+   then reloads once.  After recovery the current sw.js is registered again.
+-------------------------------------------------------------------------- */
+const APP_CACHE_RECOVERY_KEY = 'ketabkhan_cache_recovery_v3';
+async function recoverStaleServiceWorker(){
+  if(!('serviceWorker' in navigator) || !(location.protocol==='https:' || location.hostname==='localhost')) return;
+  if(sessionStorage.getItem(APP_CACHE_RECOVERY_KEY)==='done') return;
+  try{
+    const regs = await navigator.serviceWorker.getRegistrations();
+    const hadController = !!navigator.serviceWorker.controller || regs.length>0;
+    if(!hadController) return;
+    sessionStorage.setItem(APP_CACHE_RECOVERY_KEY,'done');
+    await Promise.all(regs.map(r=>r.unregister().catch(()=>false)));
+    if('caches' in window){
+      const names = await caches.keys();
+      await Promise.all(names.map(n=>caches.delete(n)));
+    }
+    location.reload();
+  }catch(e){
+    sessionStorage.setItem(APP_CACHE_RECOVERY_KEY,'done');
+  }
+}
+
 if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
-  window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  window.addEventListener('load', async ()=>{
+    await recoverStaleServiceWorker();
+    try{
+      const reg = await navigator.serviceWorker.register('./sw.js?v=3');
+      if(reg.update) await reg.update().catch(()=>{});
+    }catch(e){}
   });
 }
 
