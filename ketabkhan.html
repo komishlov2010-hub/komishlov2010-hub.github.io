@@ -95,8 +95,8 @@ input,select,textarea{font-family:inherit;}
 
 /* ===== Shell / Library ===== */
 #libraryView{max-width:1180px;margin:0 auto;padding:28px 22px 70px;}
-.lib-header{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px;}
-.brand{display:flex;align-items:center;gap:14px;}
+.lib-header{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px;}
+.brand{text-align:center;display:flex;align-items:center;gap:14px;}
 .brand .seal{
   width:52px;height:52px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 55%, #8a6c2c 100%);
@@ -114,16 +114,18 @@ input,select,textarea{font-family:inherit;}
 .brand p{margin:2px 0 0;font-size:12.5px;color:var(--muted);letter-spacing:.3px;}
 
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-.library-top-actions{display:flex;align-items:center;gap:10px;direction:rtl;position:relative;}
+.library-top-actions{display:flex;align-items:center;gap:10px;direction:rtl;position:absolute;right:0;top:0;}
 .library-settings-wrap{position:relative;}
 .library-menu-btn{width:44px;height:44px;font-size:20px;display:flex;align-items:center;justify-content:center;}
 .library-settings-panel{
-  position:fixed;right:14px;top:76px;width:min(390px,calc(100vw - 28px));max-height:calc(100vh - 92px);overflow:auto;z-index:220;
+  position:fixed;right:12px;top:68px;width:min(380px,calc(100vw - 24px));max-height:calc(100vh - 82px);overflow:auto;z-index:220;
   background:linear-gradient(180deg,var(--ink-3),var(--ink-2));
-  border:1px solid var(--gold-dim);border-radius:14px;padding:14px;
+  border:1px solid var(--gold-dim);border-radius:16px;padding:14px;
   box-shadow:0 18px 42px rgba(0,0,0,.42);direction:rtl;
+  transform:translateX(calc(100% + 24px));opacity:0;pointer-events:none;transition:transform .22s ease,opacity .18s ease;
 }
-.library-settings-panel.hidden{display:none;}
+.library-settings-panel.open{transform:translateX(0);opacity:1;pointer-events:auto;}
+.library-settings-panel.hidden{display:block;}
 .library-settings-panel::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);}
 .library-settings-panel .library-add-book{width:100%;justify-content:center;margin-top:2px;}
 .library-settings-title{font-family:'Amiri',serif;font-size:18px;font-weight:700;color:var(--gold-soft);padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--lapis);}
@@ -278,7 +280,7 @@ html[data-shell="paper"] .card .cover.title-cover .title-seal span{color:#17130d
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   margin-bottom:18px;
 }
-.folder-header h3{font-family:'Noto Naskh Arabic',serif;font-size:28px;font-weight:700;color:var(--gold-soft);margin:0;line-height:1.35;}
+.folder-header h3{font-family:'Noto Naskh Arabic',serif;font-size:30px;font-weight:700;color:var(--gold-soft);margin:0;line-height:1.35;}
 .move-menu{
   position:fixed;background:linear-gradient(180deg, var(--ink-3), var(--ink-2));
   border:1px solid var(--gold-dim);border-radius:10px;padding:6px;z-index:150;
@@ -365,6 +367,7 @@ html[data-shell="paper"] .card .cover.title-cover .title-seal span{color:#17130d
 .theme-dot[data-theme=ink]{background:#e2ded4;}
 .theme-dot[data-theme=light]{background:#ffffff;}
 .theme-dot[data-theme=ivory]{background:#f6f0df;}
+.theme-dot[data-theme=coffeeDark]{background:#2a1a12;border-color:#c9a46a;}
 .theme-dot.active{border-color:var(--gold);}
 
 .menu-wrap{position:relative;}
@@ -587,6 +590,10 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
 .theme-ink .reader-meta-author{color:#4b4b47;}
 .theme-midnightPaper .reader-content-wrap{background:#cfd8dc;color:#182028;}
 .theme-midnightPaper .reader-meta-author{color:#4a5963;}
+.theme-coffeeDark .reader-content-wrap{background:linear-gradient(135deg,#2a1a12,#3a2418);color:#fff;}
+.theme-coffeeDark .reader-meta-author{color:#f0dfc8;}
+.theme-coffeeDark .reader-content-wrap p,.theme-coffeeDark .reader-content-wrap h1,.theme-coffeeDark .reader-content-wrap h2,.theme-coffeeDark .reader-content-wrap h3{color:#fff;}
+
 html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
 
 .side-panel{
@@ -780,10 +787,6 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
             <label>قلم</label>
             <select id="fontFamilySel">
               <option value="'Noto Naskh Arabic',serif">نسخ</option>
-              <option value="'Amiri',serif">امیری (سبک کلاسیک، نزدیک به چاپی)</option>
-              <option value="'Cairo',sans-serif">نسخ مدرن</option>
-              <option value="'Tajawal',sans-serif">نسخ ساده</option>
-              <option value="'Scheherazade New',serif">شهرزاد</option>
               <option value="'Noto Nastaliq Urdu',serif">نستعلیق</option>
             </select>
           </div>
@@ -799,6 +802,7 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
               <button class="theme-dot" data-theme="light" title="سفید"></button>
               <button class="theme-dot" data-theme="aged" title="ورق کهنه"></button>
               <button class="theme-dot" data-theme="ivory" title="عاجی گرم"></button>
+              <button class="theme-dot" data-theme="coffeeDark" title="قهوه‌ای تیره — متن سفید"></button>
               <button class="theme-dot" data-theme="sage" title="سبز زیتونی آرام"></button>
               <button class="theme-dot" data-theme="ink" title="کاغذ جوهری"></button>
               <button class="theme-dot" data-theme="midnightPaper" title="آبی خاکستری آرام"></button>
@@ -932,19 +936,29 @@ function canonicalFolderName(value){
 }
 function getBookFolderCandidates(book){
   if(!book) return [''];
+  const direct=[];
+  const directKeys=['category','folder','folderName','categoryName','group','collection','categories','folders'];
+  directKeys.forEach(k=>{
+    const v=book[k];
+    if(Array.isArray(v)) v.forEach(x=>{if(x!==null&&x!==undefined) direct.push(String(x));});
+    else if(v!==null&&v!==undefined) direct.push(String(v));
+  });
+  const directOut=direct.map(canonicalFolderName).filter(Boolean);
+  if(directOut.length) return Array.from(new Set(directOut));
   const values=[];
-  const add=(v)=>{ if(Array.isArray(v)) v.forEach(add); else if(v!==null && v!==undefined) values.push(String(v)); };
   const walk=(obj,depth=0)=>{
-    if(!obj || depth>4) return;
+    if(!obj || depth>3) return;
     if(Array.isArray(obj)){ obj.forEach(v=>walk(v,depth+1)); return; }
     if(typeof obj!=='object') return;
     Object.keys(obj).forEach(k=>{
       const key=normalizeFolderName(k);
-      if(/folder|categor|group|collection|پوشه|دسته/.test(key)) add(obj[k]);
-      if(typeof obj[k]==='object') walk(obj[k],depth+1);
+      if(/folder|categor|group|collection|پوشه|دسته/.test(key)){
+        const v=obj[k];
+        if(Array.isArray(v)) v.forEach(x=>{if(x!==null&&x!==undefined) values.push(String(x));});
+        else if(v!==null&&v!==undefined) values.push(String(v));
+      }
     });
   };
-  ['category','folder','folderName','categoryName','group','collection','categories','folders'].forEach(k=>add(book[k]));
   walk(book);
   const out=values.map(canonicalFolderName).filter(Boolean);
   return out.length ? Array.from(new Set(out)) : [''];
@@ -956,9 +970,9 @@ function bookBelongsToFolder(book, folder){
   const wanted = canonicalFolderName(folder);
   if(!wanted) return getBookFolderCandidates(book).length===1 && getBookFolderCandidates(book)[0]==='';
   const candidates=getBookFolderCandidates(book);
-  if(candidates.some(candidate => candidate === wanted)) return true;
+  if(candidates.some(candidate => normalizeSearchText(candidate) === normalizeSearchText(wanted))) return true;
   // Legacy Persian records occasionally contain a longer label such as «پوشه: تفسیر».
-  return candidates.some(candidate => candidate.includes(wanted) || wanted.includes(candidate));
+  return candidates.some(candidate => { const a=normalizeSearchText(candidate), b=normalizeSearchText(wanted); return a.includes(b) || b.includes(a); });
 }
 function loadLibrary(){
   try{
@@ -966,9 +980,10 @@ function loadLibrary(){
     if(!Array.isArray(raw)) return [];
     let changed = false;
     const migrated = raw.map(b=>{
+      const existing = canonicalFolderName(b.category || '');
+      if(existing){ return b; }
       const folder = getBookFolder(b);
-      if(canonicalFolderName(b.category || '') !== folder){ changed = true; }
-      if((b.category ?? '') !== folder){ changed = true; return Object.assign({}, b, {category: folder}); }
+      if(folder){ changed = true; return Object.assign({}, b, {category: folder}); }
       return b;
     });
     if(changed){
@@ -1179,8 +1194,18 @@ function renderTagFilters(){
   });
 }
 
+function normalizeSearchText(value){
+  return String(value||'')
+    .normalize('NFKC')
+    .replace(/[يى]/g,'ی').replace(/[ك]/g,'ک').replace(/[ۀة]/g,'ه')
+    .replace(/[ؤ]/g,'و').replace(/[إأٱ]/g,'ا')
+    .replace(/[ـ]/g,'').replace(/[ً-ٰٟ]/g,'')
+    .replace(/[‌‍⁠]/g,'').replace(/\s+/g,' ')
+    .trim().toLowerCase();
+}
+
 async function filteredSortedBooks(){
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const q = normalizeSearchText(document.getElementById('searchInput').value);
   const deep = document.getElementById('deepSearchChk').checked;
   const sortBy = document.getElementById('sortSelect').value;
 
@@ -1190,12 +1215,12 @@ async function filteredSortedBooks(){
     }
     if(activeTagFilter && !(b.tags||[]).includes(activeTagFilter)) return false;
     if(!q) return true;
-    const inMeta = (b.title||'').toLowerCase().includes(q) ||
-                   (b.author||'').toLowerCase().includes(q) ||
-                   (b.tags||[]).some(t=>t.toLowerCase().includes(q));
+    const inMeta = normalizeSearchText(b.title).includes(q) ||
+                   normalizeSearchText(b.author).includes(q) ||
+                   (b.tags||[]).some(t=>normalizeSearchText(t).includes(q));
     if(inMeta) return true;
     if(deep){
-      const c = (await getContent(b.id)).toLowerCase();
+      const c = normalizeSearchText(await getContent(b.id));
       return c.includes(q);
     }
     return false;
@@ -2264,8 +2289,8 @@ document.querySelectorAll('.theme-dot').forEach(dot=>{
   dot.onclick = ()=> setReaderTheme(dot.dataset.theme, true);
 });
 function setReaderTheme(theme, persist){
-  if(!['light','aged','ivory','sage','ink','midnightPaper'].includes(theme)) theme='light';
-  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
+  if(!['light','aged','ivory','sage','ink','midnightPaper','coffeeDark'].includes(theme)) theme='light';
+  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
   readerView.classList.add('theme-'+theme);
   document.querySelectorAll('.theme-dot').forEach(d=>d.classList.toggle('active', d.dataset.theme===theme));
   if(persist) persistBookPref('theme', theme);
@@ -2535,7 +2560,7 @@ function clearSearchMarks(){
 function applySearchMarks(query){
   clearSearchMarks();
   if(!query || query.length < 2) return [];
-  const ql = query.toLowerCase();
+  const ql = normalizeSearchText(query);
   const MAX_MATCHES = 400;
   let matchCounter = 0;
   const paragraphs = readerContent.querySelectorAll('p[data-pindex]');
@@ -2714,7 +2739,7 @@ function jumpToPrintedMatch(idx){
 function runPrintedSearch(q){
   printedSearchMatches = [];
   if(q.length>=2){
-    const ql = q.toLowerCase();
+    const ql = normalizeSearchText(q);
     outer:
     for(let pIndex=0; pIndex<currentParagraphs.length; pIndex++){
       const lower = currentParagraphs[pIndex].toLowerCase();
@@ -2747,13 +2772,13 @@ async function runCurrentSearch(){
   } else {
     clearSearchMarks();
     if(q.length < 2){ bookSearchResults.classList.add('hidden'); return; }
-    const ql = q.toLowerCase();
+    const ql = normalizeSearchText(q);
     const flags = await Promise.all(library.map(async b=>{
       const inMeta = (b.title||'').toLowerCase().includes(ql) ||
                      (b.author||'').toLowerCase().includes(ql) ||
                      (b.tags||[]).some(t=>t.toLowerCase().includes(ql));
       if(inMeta) return true;
-      return (await getContent(b.id)).toLowerCase().includes(ql);
+      return normalizeSearchText(await getContent(b.id)).includes(ql);
     }));
     const results = library.filter((b,i)=>flags[i]).slice(0, 25);
     matchCountEl.textContent = results.length ? `${results.length} کتاب` : '۰ کتاب';
@@ -2848,8 +2873,8 @@ const I18N={
   tg:{name:'Тоҷикӣ',dir:'ltr',title:'Китобхонаи ман | ketabkhan'}
 };
 const UI_TRANSLATIONS={
-  ar:{'افزودن کتاب':'إضافة كتاب','تنظیمات کتابخانه':'إعدادات المكتبة','پشتیبان':'النسخ الاحتياطي','ورود پشتیبان':'استيراد نسخة احتياطية','خروجی پشتیبان':'تصدير نسخة احتياطية','ظاهر نرم‌افزار':'مظهر البرنامج','زبان نرم‌افزار':'لغة البرنامج','بازگشت':'رجوع','امکانات':'الخيارات','جستجو':'بحث','تنظیمات':'الإعدادات','قلم':'الخط','اندازه‌ی حروف':'حجم الحروف','پوسته‌ی رنگی':'ألوان القراءة','زبان نرم‌افزار':'لغة البرنامج','حالت نمایش':'وضع العرض','پیوسته':'متواصل','صفحه‌ای':'صفحات','مطابق چاپی':'مطابق للطباعة','PDF اصلی':'PDF الأصلي','ثبت نشانه در اینجا':'إضافة علامة هنا','نشانه‌ها و یادداشت‌ها':'العلامات والملاحظات','اشتراک‌گذاری با دیگران':'مشاركة الكتاب','همه‌ی کتاب‌ها':'كل الكتب','این کتاب':'هذا الكتاب','ورق کهنه':'ورق قديم','جوهر و کاغذ':'حبر وورق','زیتونی کلاسیک':'زيتوني كلاسيكي','روشن':'فاتح','تیره':'داكن','سبز روشن':'أخضر فاتح','شب آبی':'ليلي أزرق','بنفش سلطنتی':'بنفسجي ملكي','زرشکی':'عنابي'},
-  tg:{'افزودن کتاب':'Иловаи китоб','تنظیمات کتابخانه':'Танзимоти китобхона','پشتیبان':'Нусхаи эҳтиётӣ','ورود پشتیبان':'Ворид кардани нусха','خروجی پشتیبان':'Баровардани нусха','ظاهر نرم‌افزار':'Намуди барнома','زبان نرم‌افزار':'Забони барнома','بازگشت':'Бозгашт','امکانات':'Имконот','جستجو':'Ҷустуҷӯ','تنظیمات':'Танзимот','قلم':'Ҳуруф','اندازه‌ی حروف':'Андозаи ҳарф','پوسته‌ی رنگی':'Рангҳои хондан','زبان نرم‌افزار':'Забони барнома','حالت نمایش':'Ҳолати намоиш','پیوسته':'Пайваста','صفحه‌ای':'Саҳифаҳо','مطابق چاپی':'Мувофиқи чоп','PDF اصلی':'PDF аслӣ','ثبت نشانه در اینجا':'Нишона гузоштан','نشانه‌ها و یادداشت‌ها':'Нишонаҳо ва ёддоштҳо','اشتراک‌گذاری با دیگران':'Мубодила','همه‌ی کتاب‌ها':'Ҳамаи китобҳо','این کتاب':'Ин китоб','ورق کهنه':'Варақи кӯҳна','جوهر و کاغذ':'Сиёҳ ва коғаз','زیتونی کلاسیک':'Зайтунии классикӣ','روشن':'Равшан','تیره':'Торик','سبز روشن':'Сабзи равшан','شب آبی':'Шаби кабуд','بنفش سلطنتی':'Бунафши шоҳона','زرشکی':'Бургундӣ'}
+  ar:{'افزودن کتاب':'إضافة كتاب','تنظیمات کتابخانه':'إعدادات المكتبة','پشتیبان':'النسخ الاحتياطي','ورود پشتیبان':'استيراد نسخة احتياطية','خروجی پشتیبان':'تصدير نسخة احتياطية','ظاهر نرم‌افزار':'مظهر البرنامج','زبان نرم‌افزار':'لغة البرنامج','بازگشت':'رجوع','امکانات':'الخيارات','جستجو':'بحث','تنظیمات':'الإعدادات','قلم':'الخط','اندازه‌ی حروف':'حجم الحروف','پوسته‌ی رنگی':'ألوان القراءة','زبان نرم‌افزار':'لغة البرنامج','حالت نمایش':'وضع العرض','پیوسته':'متواصل','صفحه‌ای':'صفحات','مطابق چاپی':'مطابق للطباعة','PDF اصلی':'PDF الأصلي','ثبت نشانه در اینجا':'إضافة علامة هنا','نشانه‌ها و یادداشت‌ها':'العلامات والملاحظات','اشتراک‌گذاری با دیگران':'مشاركة الكتاب','همه‌ی کتاب‌ها':'كل الكتب','این کتاب':'هذا الكتاب','ورق کهنه':'ورق قديم','جوهر و کاغذ':'حبر وورق','زیتونی کلاسیک':'زيتوني كلاسيكي','روشن':'فاتح','تیره':'داكن','سبز روشن':'أخضر فاتح','شب آبی':'ليلي أزرق','بنفش سلطنتی':'بنفسجي ملكي','زرشکی':'عنابي','قهوه‌ای تیره — متن سفید':'بني داكن — نص أبيض'},
+  tg:{'افزودن کتاب':'Иловаи китоб','تنظیمات کتابخانه':'Танзимоти китобхона','پشتیبان':'Нусхаи эҳтиётӣ','ورود پشتیبان':'Ворид кардани нусха','خروجی پشتیبان':'Баровардани нусха','ظاهر نرم‌افزار':'Намуди барнома','زبان نرم‌افزار':'Забони барнома','بازگشت':'Бозгашт','امکانات':'Имконот','جستجو':'Ҷустуҷӯ','تنظیمات':'Танзимот','قلم':'Ҳуруф','اندازه‌ی حروف':'Андозаи ҳарф','پوسته‌ی رنگی':'Рангҳои хондан','زبان نرم‌افزار':'Забони барнома','حالت نمایش':'Ҳолати намоиш','پیوسته':'Пайваста','صفحه‌ای':'Саҳифаҳо','مطابق چاپی':'Мувофиқи чоп','PDF اصلی':'PDF аслӣ','ثبت نشانه در اینجا':'Нишона гузоштан','نشانه‌ها و یادداشت‌ها':'Нишонаҳо ва ёддоштҳо','اشتراک‌گذاری با دیگران':'Мубодила','همه‌ی کتاب‌ها':'Ҳамаи китобҳо','این کتاب':'Ин китоб','ورق کهنه':'Варақи кӯҳна','جوهر و کاغذ':'Сиёҳ ва коғаз','زیتونی کلاسیک':'Зайтунии классикӣ','روشن':'Равшан','تیره':'Торик','سبز روشن':'Сабзи равшан','شب آبی':'Шаби кабуд','بنفش سلطنتی':'Бунафши шоҳона','زرشکی':'Бургундӣ','قهوه‌ای تیره — متن سفید':'Қаҳвагии тира — матни сафед'}
 };
 function translateKnownUI(lang){
   const dict=UI_TRANSLATIONS[lang]||{};
@@ -2879,7 +2904,7 @@ if(appLanguageSel){
 }
 const btnLibraryMenu=document.getElementById('btnLibraryMenu');
 const btnAddBookInside=document.getElementById('btnAddBookInside');
-if(btnAddBookInside){ btnAddBookInside.onclick=()=>{ document.getElementById('btnAddBook')?.click(); librarySettingsPanel?.classList.add('hidden'); }; }
+if(btnAddBookInside){ btnAddBookInside.onclick=()=>{ document.getElementById('btnAddBook')?.click(); librarySettingsPanel?.classList.remove('open'); }; }
 const librarySettingsPanel=document.getElementById('librarySettingsPanel');
 if(btnLibraryMenu && librarySettingsPanel){
   btnLibraryMenu.addEventListener('click',(e)=>{
