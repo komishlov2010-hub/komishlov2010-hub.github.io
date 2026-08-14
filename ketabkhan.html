@@ -14,7 +14,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#2b1c12;
@@ -95,8 +95,9 @@ input,select,textarea{font-family:inherit;}
 
 /* ===== Shell / Library ===== */
 #libraryView{max-width:1180px;margin:0 auto;padding:28px 22px 70px;}
-.lib-header{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px;}
-.brand{text-align:center;display:flex;align-items:center;gap:14px;}
+.lib-header{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px;min-height:68px;}
+.brand{position:absolute;left:50%;top:0;transform:translateX(-50%);}
+.brand{text-align:center;display:flex;align-items:center;gap:14px;white-space:nowrap;}
 .brand .seal{
   width:52px;height:52px;border-radius:50%;
   background:radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 55%, #8a6c2c 100%);
@@ -106,8 +107,8 @@ input,select,textarea{font-family:inherit;}
   flex-shrink:0;
 }
 .brand h1{
-  font-family:'Noto Nastaliq Urdu','Amiri',serif;
-  font-size:30px;margin:0;font-weight:600;letter-spacing:.5px;
+  font-family:'Noto Naskh Arabic','Amiri',serif;
+  font-size:32px;margin:0;font-weight:600;letter-spacing:.5px;
   background:linear-gradient(90deg, var(--gold-soft), var(--gold) 60%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
@@ -118,9 +119,9 @@ input,select,textarea{font-family:inherit;}
 .library-settings-wrap{position:relative;}
 .library-menu-btn{width:44px;height:44px;font-size:20px;display:flex;align-items:center;justify-content:center;}
 .library-settings-panel{
-  position:fixed;right:12px;top:68px;width:min(380px,calc(100vw - 24px));max-height:calc(100vh - 82px);overflow:auto;z-index:220;
+  position:fixed;right:0;top:0;bottom:0;width:min(50vw,460px);max-height:none;overflow:auto;z-index:220;
   background:linear-gradient(180deg,var(--ink-3),var(--ink-2));
-  border:1px solid var(--gold-dim);border-radius:16px;padding:14px;
+  border:1px solid var(--gold-dim);border-radius:16px 0 0 16px;padding:22px 18px;
   box-shadow:0 18px 42px rgba(0,0,0,.42);direction:rtl;
   transform:translateX(calc(100% + 24px));opacity:0;pointer-events:none;transition:transform .22s ease,opacity .18s ease;
 }
@@ -142,7 +143,9 @@ input,select,textarea{font-family:inherit;}
 }
 .app-language-select:focus{border-color:var(--gold);}
 @media(max-width:620px){
-  .library-settings-panel{right:8px;top:68px;width:calc(100vw - 16px);max-height:calc(100vh - 80px);}
+  .brand h1{font-size:26px;}
+  .brand p{font-size:11px;}
+  .library-settings-panel{right:0;top:0;bottom:0;width:min(88vw,430px);max-height:none;border-radius:16px 0 0 16px;}
   .library-backup-actions{grid-template-columns:1fr;}
   .library-menu-btn{width:42px;height:42px;}
 }
@@ -223,7 +226,7 @@ input,select,textarea{font-family:inherit;}
   display:flex;align-items:center;justify-content:center;text-align:center;
 }
 .card .cover.title-cover .title-seal span{
-  font-family:'Amiri',serif;font-size:22px;font-weight:700;line-height:1.5;
+  font-family:'Noto Naskh Arabic',serif;font-size:24px;font-weight:700;line-height:1.5;
   color:var(--gold-soft);display:block;max-width:100%;
 }
 /* Rich book-cover colors: deliberately different from the software shell. */
@@ -274,13 +277,13 @@ html[data-shell="paper"] .card .cover.title-cover .title-seal span{color:#17130d
 .folder-card:hover{border-color:var(--gold);background:var(--ink-3);}
 .folder-card-add{border-style:dashed;}
 .folder-icon{font-size:24px;flex-shrink:0;}
-.folder-name{font-family:'Noto Naskh Arabic',serif;font-size:17px;font-weight:700;color:var(--ink-text);flex:1;}
+.folder-name{font-family:'Noto Naskh Arabic',serif;font-size:22px;font-weight:700;color:var(--ink-text);flex:1;}
 .folder-count{font-size:12.5px;color:var(--muted);flex-shrink:0;}
 .folder-header{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   margin-bottom:18px;
 }
-.folder-header h3{font-family:'Noto Naskh Arabic',serif;font-size:30px;font-weight:700;color:var(--gold-soft);margin:0;line-height:1.35;}
+.folder-header h3{font-family:'Noto Naskh Arabic',serif;font-size:34px;font-weight:700;color:var(--gold-soft);margin:0;line-height:1.35;}
 .move-menu{
   position:fixed;background:linear-gradient(180deg, var(--ink-3), var(--ink-2));
   border:1px solid var(--gold-dim);border-radius:10px;padding:6px;z-index:150;
@@ -327,8 +330,8 @@ html[data-shell="paper"] .card .cover.title-cover .title-seal span{color:#17130d
   pointer-events:none;
 }
 .reader-topbar > *{pointer-events:auto;}
-.reader-back{position:absolute;right:16px;top:9px;}
-.reader-actions{position:absolute;left:16px;top:9px;display:flex;align-items:center;gap:8px;direction:ltr;}
+.reader-back{position:absolute;left:16px;top:9px;}
+.reader-actions{position:absolute;right:16px;top:9px;display:flex;align-items:center;gap:8px;direction:rtl;}
 .reader-titlebar{
   max-width:min(58vw,720px);display:flex;flex-direction:column;align-items:center;justify-content:center;
   line-height:1.15;text-align:center;pointer-events:none;
@@ -368,6 +371,7 @@ html[data-shell="paper"] .card .cover.title-cover .title-seal span{color:#17130d
 .theme-dot[data-theme=light]{background:#ffffff;}
 .theme-dot[data-theme=ivory]{background:#f6f0df;}
 .theme-dot[data-theme=coffeeDark]{background:#2a1a12;border-color:#c9a46a;}
+.theme-dot[data-theme=coffeeBlack]{background:#17100d;border-color:#d4b47a;}
 .theme-dot.active{border-color:var(--gold);}
 
 .menu-wrap{position:relative;}
@@ -414,14 +418,18 @@ html[data-shell="paper"] .card .cover.title-cover .title-seal span{color:#17130d
 }
 .circle-btn:hover{border-color:var(--gold);}
 .menu-dropdown{
-  position:fixed; z-index:90;
+  position:fixed; z-index:190; top:0; right:0; bottom:0;
+  width:min(50vw,520px); min-width:320px; max-width:92vw;
   background:linear-gradient(180deg, var(--ink-3), var(--ink-2));
-  border:1px solid var(--gold-dim); border-radius:14px;
-  padding:8px 8px 14px; min-width:250px; max-width:calc(100vw - 16px);
-  max-height:calc(100vh - 90px); overflow-y:auto;
-  box-shadow:var(--shadow);
+  border:1px solid var(--gold-dim); border-right:0; border-radius:18px 0 0 18px;
+  padding:76px 18px 24px; overflow-y:auto;
+  box-shadow:-22px 0 50px rgba(0,0,0,.42);
+  transform:translateX(105%); opacity:0; pointer-events:none;
+  transition:transform .24s ease,opacity .18s ease;
 }
-.menu-dropdown.hidden{display:none;}
+.menu-dropdown.open{transform:translateX(0);opacity:1;pointer-events:auto;}
+.menu-dropdown.hidden{display:block;}
+@media(max-width:620px){.menu-dropdown{width:88vw;min-width:0;border-radius:16px 0 0 16px;padding:72px 14px 20px;}}
 .menu-section{padding:10px 8px 6px;border-top:1px solid var(--lapis);}
 .menu-section:first-child{border-top:none;}
 .menu-section-title{font-size:11.5px;color:var(--gold-soft);font-weight:700;margin-bottom:8px;letter-spacing:.3px;}
@@ -593,6 +601,9 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
 .theme-coffeeDark .reader-content-wrap{background:linear-gradient(135deg,#2a1a12,#3a2418);color:#fff;}
 .theme-coffeeDark .reader-meta-author{color:#f0dfc8;}
 .theme-coffeeDark .reader-content-wrap p,.theme-coffeeDark .reader-content-wrap h1,.theme-coffeeDark .reader-content-wrap h2,.theme-coffeeDark .reader-content-wrap h3{color:#fff;}
+.theme-coffeeBlack .reader-content-wrap{background:linear-gradient(135deg,#17100d,#211510);color:#fff;}
+.theme-coffeeBlack .reader-content-wrap p,.theme-coffeeBlack .reader-content-wrap h1,.theme-coffeeBlack .reader-content-wrap h2,.theme-coffeeBlack .reader-content-wrap h3{color:#fff;}
+.theme-coffeeBlack .reader-meta-author{color:#f1dfc2;}
 
 html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
 
@@ -678,6 +689,12 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
           </div>
 
           <div class="library-settings-section">
+            <div class="library-settings-label">منابع کتاب</div>
+            <a class="btn ghost" href="https://shamela.ws" target="_blank" rel="noopener" style="width:100%;justify-content:center;text-decoration:none">📚 المكتبة الشاملة</a>
+            <div class="hint" style="margin-top:7px">کتاب را از منبع رسمی دریافت کنید و سپس با «افزودن کتاب» وارد کتابخانه کنید.</div>
+          </div>
+
+          <div class="library-settings-section">
             <div class="library-settings-label">زبان نرم‌افزار</div>
             <select id="appLanguageSel" class="app-language-select" aria-label="زبان نرم‌افزار">
               <option value="fa">فارسی</option>
@@ -696,7 +713,7 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
     <div class="search-row">
       <input type="text" id="searchInput" placeholder="جستجو در عنوان، نویسنده یا برچسب…">
       <select id="sortSelect">
-        <option value="recent">تازه‌ترین</option>
+        <option value="recent" title="بر اساس زمان افزودن کتاب مرتب می‌کند">آخرین افزوده‌شده‌ها</option>
         <option value="title">عنوان (الفبا)</option>
         <option value="author">نویسنده</option>
         <option value="progress">پیشرفت مطالعه</option>
@@ -778,7 +795,7 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
     </div>
     <div class="reader-actions">
       <div class="menu-wrap">
-        <button class="circle-btn" id="btnMenuToggle" title="امکانات">☰</button>
+        <button class="circle-btn" id="btnMenuToggle" title="امکانات" aria-expanded="false" aria-controls="menuDropdown">☰</button>
       <div class="menu-dropdown hidden" id="menuDropdown">
 
         <div class="menu-section">
@@ -787,6 +804,8 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
             <label>قلم</label>
             <select id="fontFamilySel">
               <option value="'Noto Naskh Arabic',serif">نسخ</option>
+              <option value="'Amiri',serif">أميري</option>
+              <option value="'Scheherazade New',serif">شهرزاد</option>
               <option value="'Noto Nastaliq Urdu',serif">نستعلیق</option>
             </select>
           </div>
@@ -806,6 +825,7 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
               <button class="theme-dot" data-theme="sage" title="سبز زیتونی آرام"></button>
               <button class="theme-dot" data-theme="ink" title="کاغذ جوهری"></button>
               <button class="theme-dot" data-theme="midnightPaper" title="آبی خاکستری آرام"></button>
+              <button class="theme-dot" data-theme="coffeeBlack" title="قهوه‌ای مشکی — متن سفید"></button>
             </div>
           </div>
           <div class="settings-row">
@@ -1194,6 +1214,13 @@ function renderTagFilters(){
   });
 }
 
+const SEARCH_CONTENT_CACHE = new Map();
+async function cachedBookContent(id){
+  if(SEARCH_CONTENT_CACHE.has(id)) return SEARCH_CONTENT_CACHE.get(id);
+  const p=getContent(id);
+  SEARCH_CONTENT_CACHE.set(id,p);
+  return p;
+}
 function normalizeSearchText(value){
   return String(value||'')
     .normalize('NFKC')
@@ -1217,10 +1244,11 @@ async function filteredSortedBooks(){
     if(!q) return true;
     const inMeta = normalizeSearchText(b.title).includes(q) ||
                    normalizeSearchText(b.author).includes(q) ||
+                   normalizeSearchText(getBookFolder(b)).includes(q) ||
                    (b.tags||[]).some(t=>normalizeSearchText(t).includes(q));
     if(inMeta) return true;
     if(deep){
-      const c = normalizeSearchText(await getContent(b.id));
+      const c = normalizeSearchText(await cachedBookContent(b.id));
       return c.includes(q);
     }
     return false;
@@ -1245,6 +1273,12 @@ function renderFolderOverview(){
   };
   const items = Array.from(new Set(allFolders())).map(c=>({key:c,label:c,count:countFor(c)}));
   items.push({key:'', label:'بدون پوشه', count:countFor('')});
+  const sourceCard = document.createElement('div');
+  sourceCard.className='folder-card';
+  sourceCard.innerHTML=`<div class="folder-icon">📚</div><div class="folder-name">المكتبة الشاملة</div><div class="folder-count">منبع آنلاین</div>`;
+  sourceCard.title='باز کردن منبع رسمی المكتبة الشاملة';
+  sourceCard.onclick=()=>window.open('https://shamela.ws','_blank','noopener');
+  grid.appendChild(sourceCard);
   items.forEach(it=>{
     const card = document.createElement('div');
     card.className = 'folder-card';
@@ -1408,7 +1442,11 @@ function deleteBook(id){
   toast('کتاب حذف شد');
 }
 
-document.getElementById('searchInput').addEventListener('input', renderLibrary);
+let librarySearchTimer=null;
+document.getElementById('searchInput').addEventListener('input', ()=>{
+  clearTimeout(librarySearchTimer);
+  librarySearchTimer=setTimeout(()=>renderLibrary(),180);
+});
 document.getElementById('sortSelect').addEventListener('change', renderLibrary);
 document.getElementById('deepSearchChk').addEventListener('change', renderLibrary);
 
@@ -1743,8 +1781,9 @@ async function openBook(id){
   document.getElementById('libraryView').classList.add('hidden');
   readerView.classList.remove('hidden');
   sidePanel.classList.add('hidden');
-  document.getElementById('menuDropdown').classList.add('hidden');
+  document.getElementById('menuDropdown').classList.remove('open');
   document.getElementById('searchDropdown').classList.add('hidden');
+  document.getElementById('menuDropdown').classList.remove('open');
 
   contentWrap.classList.toggle('mode-paginated', mode==='paginated');
   pagiBar.classList.add('show');
@@ -1795,6 +1834,7 @@ async function openBook(id){
 
 let virtualPages = [];
 let virtualPaginationReady = false;
+const virtualPageHTMLCache = new Map();
 let pdfDoc = null;
 let pdfRendering = false;
 function isLargeBook(){ const b=currentBook(); return !!(b && (b.wordCount||0)>LARGE_BOOK_WORD_THRESHOLD); }
@@ -1836,7 +1876,8 @@ function splitTextIntoPageSegments(text, pIndex, target){
 }
 function buildVirtualPages(){
   virtualPages=[];
-  const target=estimatePageChars();
+  virtualPageHTMLCache.clear();
+  const target=Math.max(300, Math.floor(estimatePageChars()*0.92));
   let page={segments:[], chars:0};
   currentParagraphs.forEach((text,pIndex)=>{
     const pieces=splitTextIntoPageSegments(text,pIndex,Math.max(240,target));
@@ -1872,20 +1913,33 @@ function renderParagraphSliceHTML(text,pIndex,start,end,highlights){
 }
 function renderVirtualPage(idx){
   const page=virtualPages[idx]; if(!page) return;
-  const st=getBookState(currentBookId);
-  let html='';
-  page.segments.forEach((seg,segIndex)=>{
-    const text=currentParagraphs[seg.pIndex] || '';
-    const body=renderParagraphSliceHTML(text,seg.pIndex,seg.start,seg.end,st.highlights);
-    const startsMid=seg.start>0, endsMid=seg.end<text.length;
-    html += `<p data-pindex="${seg.pIndex}" data-seg-start="${seg.start}" data-seg-end="${seg.end}" class="virtual-segment">${body}</p>`;
-  });
+  let html=virtualPageHTMLCache.get(idx);
+  if(!html){
+    const st=getBookState(currentBookId);
+    html='';
+    page.segments.forEach(seg=>{
+      const text=currentParagraphs[seg.pIndex] || '';
+      const body=renderParagraphSliceHTML(text,seg.pIndex,seg.start,seg.end,st.highlights);
+      html += `<p data-pindex="${seg.pIndex}" data-seg-start="${seg.start}" data-seg-end="${seg.end}" class="virtual-segment">${body}</p>`;
+    });
+    virtualPageHTMLCache.set(idx,html);
+  }
   readerContent.style.columnWidth='';
   readerContent.style.height='auto';
   readerContent.style.transform='none';
   readerContent.innerHTML=html;
   readerContent.parentElement.scrollTop=0;
   updateReaderTopInfo(idx+1,virtualPages.length);
+  // Prepare adjacent pages off the main navigation path so repeated flipping is instant.
+  [idx-1,idx+1].forEach(n=>{
+    if(n<0 || n>=virtualPages.length || virtualPageHTMLCache.has(n)) return;
+    const st=getBookState(currentBookId); let h='';
+    virtualPages[n].segments.forEach(seg=>{
+      const text=currentParagraphs[seg.pIndex]||'';
+      h += `<p data-pindex="${seg.pIndex}" data-seg-start="${seg.start}" data-seg-end="${seg.end}" class="virtual-segment">${renderParagraphSliceHTML(text,seg.pIndex,seg.start,seg.end,st.highlights)}</p>`;
+    });
+    virtualPageHTMLCache.set(n,h);
+  });
 }
 function goToVirtualPage(n,animate){
   if(!virtualPaginationReady) buildVirtualPages();
@@ -2176,11 +2230,10 @@ const menuDropdown = document.getElementById('menuDropdown');
 const btnMenuToggle = document.getElementById('btnMenuToggle');
 btnMenuToggle.onclick = (e)=>{
   e.stopPropagation();
-  if(menuDropdown.classList.contains('hidden')){
-    positionDropdownNear(menuDropdown, btnMenuToggle);
-  } else {
-    menuDropdown.classList.add('hidden');
-  }
+  const opening=!menuDropdown.classList.contains('open');
+  menuDropdown.classList.toggle('open', opening);
+  menuDropdown.classList.remove('hidden');
+  btnMenuToggle.setAttribute('aria-expanded',String(opening));
 };
 const searchDropdown = document.getElementById('searchDropdown');
 const btnSearchToggle = document.getElementById('btnSearchToggle');
@@ -2194,7 +2247,7 @@ btnSearchToggle.onclick = (e)=>{
   }
 };
 document.getElementById('btnShareBook').onclick = async ()=>{
-  menuDropdown.classList.add('hidden');
+  menuDropdown.classList.remove('open');
   const book = currentBook();
   if(!book) return;
   const shareText = `${book.title}${book.author ? ' — ' + book.author : ''}\nاز «کتابخانه‌ی من»`;
@@ -2212,9 +2265,10 @@ document.getElementById('btnShareBook').onclick = async ()=>{
 };
 
 document.addEventListener('click', (e)=>{
-  if(!menuDropdown.classList.contains('hidden') &&
+  if(menuDropdown.classList.contains('open') &&
      !menuDropdown.contains(e.target) && e.target!==btnMenuToggle){
-    menuDropdown.classList.add('hidden');
+    menuDropdown.classList.remove('open');
+    btnMenuToggle.setAttribute('aria-expanded','false');
   }
   if(!searchDropdown.classList.contains('hidden') &&
      !searchDropdown.contains(e.target) && e.target!==btnSearchToggle){
@@ -2289,8 +2343,8 @@ document.querySelectorAll('.theme-dot').forEach(dot=>{
   dot.onclick = ()=> setReaderTheme(dot.dataset.theme, true);
 });
 function setReaderTheme(theme, persist){
-  if(!['light','aged','ivory','sage','ink','midnightPaper','coffeeDark'].includes(theme)) theme='light';
-  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
+  if(!['light','aged','ivory','sage','ink','midnightPaper','coffeeDark','coffeeBlack'].includes(theme)) theme='light';
+  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-coffeeBlack','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
   readerView.classList.add('theme-'+theme);
   document.querySelectorAll('.theme-dot').forEach(d=>d.classList.toggle('active', d.dataset.theme===theme));
   if(persist) persistBookPref('theme', theme);
@@ -2482,7 +2536,7 @@ function pageIndexOfElement(pEl){
 }
 
 document.getElementById('btnBookmarkHere').onclick = ()=>{
-  menuDropdown.classList.add('hidden');
+  menuDropdown.classList.remove('open');
   const paras = readerContent.querySelectorAll('p[data-pindex]');
   let targetIndex = 0;
   if(readerMode==='paginated'){
@@ -2537,7 +2591,7 @@ function renderBookmarks(){
 }
 
 document.getElementById('btnTogglePanel').onclick = ()=>{
-  menuDropdown.classList.add('hidden');
+  menuDropdown.classList.remove('open');
   sidePanel.classList.toggle('hidden');
   if(readerMode==='paginated') setTimeout(()=>remeasurePagination(true), 0);
 };
@@ -2742,7 +2796,7 @@ function runPrintedSearch(q){
     const ql = normalizeSearchText(q);
     outer:
     for(let pIndex=0; pIndex<currentParagraphs.length; pIndex++){
-      const lower = currentParagraphs[pIndex].toLowerCase();
+      const lower = normalizeSearchText(currentParagraphs[pIndex]);
       let idx=0;
       while(true){
         const found = lower.indexOf(ql, idx);
@@ -2909,14 +2963,15 @@ const librarySettingsPanel=document.getElementById('librarySettingsPanel');
 if(btnLibraryMenu && librarySettingsPanel){
   btnLibraryMenu.addEventListener('click',(e)=>{
     e.stopPropagation();
-    const opening=librarySettingsPanel.classList.contains('hidden');
-    librarySettingsPanel.classList.toggle('hidden');
+    const opening=!librarySettingsPanel.classList.contains('open');
+    librarySettingsPanel.classList.toggle('open',opening);
+    librarySettingsPanel.classList.remove('hidden');
     btnLibraryMenu.setAttribute('aria-expanded',String(opening));
   });
   librarySettingsPanel.addEventListener('click',e=>e.stopPropagation());
   document.addEventListener('click',()=>{
-    if(!librarySettingsPanel.classList.contains('hidden')){
-      librarySettingsPanel.classList.add('hidden');
+    if(librarySettingsPanel.classList.contains('open')){
+      librarySettingsPanel.classList.remove('open');
       btnLibraryMenu.setAttribute('aria-expanded','false');
     }
   });
