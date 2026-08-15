@@ -175,6 +175,25 @@ input,select,textarea{font-family:inherit;}
 .btn.small{padding:6px 10px;font-size:12px;}
 .btn:disabled{opacity:.4;cursor:not-allowed;}
 
+
+.global-search-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.48);display:flex;align-items:stretch;justify-content:center;}
+.global-search-overlay.hidden{display:none;}
+.global-search-panel{width:min(900px,100vw);height:100%;background:var(--ink);color:var(--ink-text);overflow:auto;padding:22px 20px;box-shadow:0 0 50px rgba(0,0,0,.5);}
+.global-search-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:4px 0 14px;border-bottom:1px solid var(--gold-dim);background:var(--ink);}
+.global-search-query{padding:14px 0;color:var(--muted);font-size:14px;}
+.global-search-results{display:flex;flex-direction:column;gap:10px;}
+.global-search-result{padding:13px 15px;border:1px solid var(--gold-dim);border-radius:10px;background:var(--ink-2);cursor:pointer;}
+.global-search-result:hover{border-color:var(--gold);}
+.global-search-result b{display:block;color:var(--gold-soft);font-family:'Noto Naskh Arabic',serif;font-size:17px;margin-bottom:4px;}
+.global-search-result .snippet{font-size:14px;line-height:2;color:var(--ink-text);}
+.search-hit{color:#d71920 !important;background:rgba(215,25,32,.10);font-weight:800;border-radius:3px;padding:0 2px;}
+.paper-custom-wrap{display:flex;align-items:center;gap:8px;margin-top:8px;}
+.paper-custom-wrap input[type=color]{width:38px;height:30px;border:1px solid var(--gold-dim);border-radius:7px;background:transparent;padding:2px;}
+.paper-custom-wrap button{flex:1;}
+.theme-coffeeMid .reader-content-wrap{background:linear-gradient(135deg,#5a3b25,#6d4a2e);color:#fff;}
+.theme-coffeeMid .reader-content-wrap p,.theme-coffeeMid .reader-content-wrap h1,.theme-coffeeMid .reader-content-wrap h2,.theme-coffeeMid .reader-content-wrap h3{color:#fff;}
+.theme-islamic .reader-content-wrap{background-color:#f1e4c0;color:#292015;background-image:repeating-linear-gradient(45deg,rgba(120,86,28,.11) 0 2px,transparent 2px 16px),repeating-linear-gradient(-45deg,rgba(120,86,28,.08) 0 2px,transparent 2px 16px);}
+
 .search-panel{
   background:linear-gradient(180deg, var(--ink-2), var(--ink));
   border:1px solid var(--gold-dim);
@@ -604,6 +623,8 @@ mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b
 .theme-coffeeBlack .reader-content-wrap{background:linear-gradient(135deg,#17100d,#211510);color:#fff;}
 .theme-coffeeBlack .reader-content-wrap p,.theme-coffeeBlack .reader-content-wrap h1,.theme-coffeeBlack .reader-content-wrap h2,.theme-coffeeBlack .reader-content-wrap h3{color:#fff;}
 .theme-coffeeBlack .reader-meta-author{color:#f1dfc2;}
+.theme-custom .reader-content-wrap{background:var(--custom-paper,#d8c2a0);color:var(--custom-paper-text,#17130d);}
+.theme-custom .reader-content-wrap p,.theme-custom .reader-content-wrap h1,.theme-custom .reader-content-wrap h2,.theme-custom .reader-content-wrap h3{color:var(--custom-paper-text,#17130d);}
 
 html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
 
@@ -712,6 +733,7 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
   <div class="search-panel">
     <div class="search-row">
       <input type="text" id="searchInput" placeholder="جستجو در عنوان، نویسنده یا برچسب…">
+      <button class="btn primary" id="librarySearchBtn" type="button" title="جستجو">⌕ جستجو</button>
       <select id="sortSelect">
         <option value="recent" title="بر اساس زمان افزودن کتاب مرتب می‌کند">آخرین افزوده‌شده‌ها</option>
         <option value="title">عنوان (الفبا)</option>
@@ -822,6 +844,8 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
               <button class="theme-dot" data-theme="aged" title="ورق کهنه"></button>
               <button class="theme-dot" data-theme="ivory" title="عاجی گرم"></button>
               <button class="theme-dot" data-theme="coffeeDark" title="قهوه‌ای تیره — متن سفید"></button>
+              <button class="theme-dot" data-theme="coffeeMid" title="قهوه‌ای میانه — متن سفید"></button>
+              <button class="theme-dot" data-theme="islamic" title="نقش اسلامی — کاغذ روشن"></button>
               <button class="theme-dot" data-theme="sage" title="سبز زیتونی آرام"></button>
               <button class="theme-dot" data-theme="ink" title="کاغذ جوهری"></button>
               <button class="theme-dot" data-theme="midnightPaper" title="آبی خاکستری آرام"></button>
@@ -1000,9 +1024,11 @@ function loadLibrary(){
     if(!Array.isArray(raw)) return [];
     let changed = false;
     const migrated = raw.map(b=>{
-      const existing = canonicalFolderName(b.category || '');
+      const candidates = getBookFolderCandidates(b);
+      const existingRaw = b.category ?? b.folder ?? b.folderName ?? b.categoryName ?? '';
+      const existing = canonicalFolderName(existingRaw);
       if(existing){ return b; }
-      const folder = getBookFolder(b);
+      const folder = candidates.find(Boolean) || '';
       if(folder){ changed = true; return Object.assign({}, b, {category: folder}); }
       return b;
     });
@@ -2343,12 +2369,14 @@ document.querySelectorAll('.theme-dot').forEach(dot=>{
   dot.onclick = ()=> setReaderTheme(dot.dataset.theme, true);
 });
 function setReaderTheme(theme, persist){
-  if(!['light','aged','ivory','sage','ink','midnightPaper','coffeeDark','coffeeBlack'].includes(theme)) theme='light';
-  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-coffeeBlack','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
+  if(!['light','aged','ivory','sage','ink','midnightPaper','coffeeDark','coffeeMid','coffeeBlack','islamic'].includes(theme)) theme='light';
+  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-coffeeMid','theme-coffeeBlack','theme-islamic','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
   readerView.classList.add('theme-'+theme);
   document.querySelectorAll('.theme-dot').forEach(d=>d.classList.toggle('active', d.dataset.theme===theme));
+  readerView.style.removeProperty('--custom-paper'); readerView.style.removeProperty('--custom-paper-text');
   if(persist) persistBookPref('theme', theme);
 }
+
 function persistBookPref(key, value){
   const st = getBookState(currentBookId);
   st[key] = value;
@@ -2356,6 +2384,23 @@ function persistBookPref(key, value){
   settings[key] = value;
   saveSettings(settings);
 }
+
+/* --- advanced paper color --- */
+const customPaperColor=document.getElementById('customPaperColor');
+const applyCustomPaper=document.getElementById('applyCustomPaper');
+function applyCustomPaperColor(color,persist=true){
+  if(!/^#[0-9a-fA-F]{6}$/.test(color)) return;
+  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-coffeeMid','theme-coffeeBlack','theme-islamic','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
+  readerView.classList.add('theme-custom');
+  readerView.style.setProperty('--custom-paper',color);
+  const c=parseInt(color.slice(1),16), r=(c>>16)&255,g=(c>>8)&255,b=c&255;
+  const lum=(0.299*r+0.587*g+0.114*b);
+  const fg=lum<145?'#ffffff':'#17130d';
+  readerView.style.setProperty('--custom-paper-text',fg);
+  if(customPaperColor) customPaperColor.value=color;
+  if(persist) persistBookPref('customPaperColor',color);
+}
+if(applyCustomPaper) applyCustomPaper.onclick=()=>applyCustomPaperColor(customPaperColor.value,true);
 
 /* --- scroll progress --- */
 contentWrap.addEventListener('scroll', ()=>{
@@ -2860,6 +2905,8 @@ inBookSearchInput.addEventListener('input', ()=>{
   clearTimeout(searchDebounceTimer);
   searchDebounceTimer = setTimeout(runCurrentSearch, 220);
 });
+inBookSearchInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();runCurrentSearch();}});
+
 document.getElementById('nextMatch').onclick = ()=>{
   if(readerMode==='printed'){
     if(!printedSearchMatches.length) return;
@@ -3037,5 +3084,13 @@ if('serviceWorker' in navigator && (location.protocol==='https:' || location.hos
 
 })();
 </script>
+
+  <div id="globalSearchOverlay" class="global-search-overlay hidden" aria-hidden="true">
+    <div class="global-search-panel">
+      <div class="global-search-head"><strong id="globalSearchTitle">نتایج جستجو</strong><button class="circle-btn" id="globalSearchClose" type="button">×</button></div>
+      <div class="global-search-query" id="globalSearchQuery"></div>
+      <div id="globalSearchResults" class="global-search-results"></div>
+    </div>
+  </div>
 </body>
 </html>
