@@ -186,13 +186,19 @@ input,select,textarea{font-family:inherit;}
 .global-search-result:hover{border-color:var(--gold);}
 .global-search-result b{display:block;color:var(--gold-soft);font-family:'Noto Naskh Arabic',serif;font-size:17px;margin-bottom:4px;}
 .global-search-result .snippet{font-size:14px;line-height:2;color:var(--ink-text);}
+.global-search-result{display:block;width:100%;text-align:inherit;color:var(--ink-text);font-family:inherit;}
+.global-search-result span,.global-search-result small{display:block;color:var(--muted);margin-top:3px;}
+.global-search-hit{color:#c4121c;background:rgba(196,18,28,.10);font-weight:900;padding:0 2px;border-radius:3px;}
+.global-search-empty{padding:40px 10px;text-align:center;color:var(--muted);font-size:16px;}
+.global-search-open{overflow:hidden;}
+
 .search-hit{color:#d71920 !important;background:rgba(215,25,32,.10);font-weight:800;border-radius:3px;padding:0 2px;}
 .paper-custom-wrap{display:flex;align-items:center;gap:8px;margin-top:8px;}
 .paper-custom-wrap input[type=color]{width:38px;height:30px;border:1px solid var(--gold-dim);border-radius:7px;background:transparent;padding:2px;}
 .paper-custom-wrap button{flex:1;}
 .theme-coffeeMid .reader-content-wrap{background:linear-gradient(135deg,#5a3b25,#6d4a2e);color:#fff;}
 .theme-coffeeMid .reader-content-wrap p,.theme-coffeeMid .reader-content-wrap h1,.theme-coffeeMid .reader-content-wrap h2,.theme-coffeeMid .reader-content-wrap h3{color:#fff;}
-.theme-islamic .reader-content-wrap{background-color:#f1e4c0;color:#292015;background-image:repeating-linear-gradient(45deg,rgba(120,86,28,.11) 0 2px,transparent 2px 16px),repeating-linear-gradient(-45deg,rgba(120,86,28,.08) 0 2px,transparent 2px 16px);}
+.theme-islamic .reader-content-wrap{background-color:#efe0b9;color:#2b2115;background-image:radial-gradient(circle at 18px 18px,rgba(105,66,18,.18) 0 2px,transparent 2.5px),linear-gradient(45deg,transparent 46%,rgba(105,66,18,.10) 47% 53%,transparent 54%),linear-gradient(-45deg,transparent 46%,rgba(105,66,18,.08) 47% 53%,transparent 54%);background-size:36px 36px,36px 36px,36px 36px;}
 
 .search-panel{
   background:linear-gradient(180deg, var(--ink-2), var(--ink));
@@ -851,6 +857,10 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
               <button class="theme-dot" data-theme="midnightPaper" title="آبی خاکستری آرام"></button>
               <button class="theme-dot" data-theme="coffeeBlack" title="قهوه‌ای مشکی — متن سفید"></button>
             </div>
+            <div class="paper-custom-wrap" aria-label="رنگ دلخواه ورق">
+              <input type="color" id="customPaperColor" value="#6b4a2f" title="انتخاب رنگ دلخواه ورق">
+              <button class="btn ghost" id="applyCustomPaper" type="button">اعمال رنگ دلخواه</button>
+            </div>
           </div>
           <div class="settings-row">
             <label>زبان نرم‌افزار</label>
@@ -1011,12 +1021,22 @@ function getBookFolder(book){
   return getBookFolderCandidates(book)[0] || '';
 }
 function bookBelongsToFolder(book, folder){
-  const wanted = canonicalFolderName(folder);
-  if(!wanted) return getBookFolderCandidates(book).length===1 && getBookFolderCandidates(book)[0]==='';
-  const candidates=getBookFolderCandidates(book);
-  if(candidates.some(candidate => normalizeSearchText(candidate) === normalizeSearchText(wanted))) return true;
-  // Legacy Persian records occasionally contain a longer label such as «پوشه: تفسیر».
-  return candidates.some(candidate => { const a=normalizeSearchText(candidate), b=normalizeSearchText(wanted); return a.includes(b) || b.includes(a); });
+  const wantedRaw=String(folder??'');
+  const wanted=canonicalFolderName(wantedRaw);
+  const rawCandidates=[];
+  const keys=['category','folder','folderName','categoryName','group','collection','categories','folders'];
+  keys.forEach(k=>{
+    const v=book?.[k];
+    if(Array.isArray(v)) v.forEach(x=>{if(x!==null&&x!==undefined) rawCandidates.push(String(x));});
+    else if(v!==null&&v!==undefined) rawCandidates.push(String(v));
+  });
+  if(!wanted) return rawCandidates.length===0 || rawCandidates.some(v=>!canonicalFolderName(v));
+  const candidates=[...rawCandidates,...getBookFolderCandidates(book)].map(canonicalFolderName).filter(Boolean);
+  const target=normalizeSearchText(wanted);
+  return candidates.some(candidate=>{
+    const a=normalizeSearchText(candidate);
+    return a===target || a.includes(target) || target.includes(a);
+  });
 }
 function loadLibrary(){
   try{
@@ -1263,7 +1283,7 @@ async function filteredSortedBooks(){
   const sortBy = document.getElementById('sortSelect').value;
 
   const flags = await Promise.all(library.map(async b=>{
-    if(!q && currentFolder!==null){
+    if(currentFolder!==null){
       if(!bookBelongsToFolder(b, currentFolder)) return false;
     }
     if(activeTagFilter && !(b.tags||[]).includes(activeTagFilter)) return false;
@@ -1803,6 +1823,7 @@ async function openBook(id){
   readerContent.style.fontFamily = fam;
   readerContent.style.fontSize = size + 'px';
   setReaderTheme(theme, false);
+  if(st.customPaperColor) applyCustomPaperColor(st.customPaperColor, false);
 
   document.getElementById('libraryView').classList.add('hidden');
   readerView.classList.remove('hidden');
@@ -2370,7 +2391,7 @@ document.querySelectorAll('.theme-dot').forEach(dot=>{
 });
 function setReaderTheme(theme, persist){
   if(!['light','aged','ivory','sage','ink','midnightPaper','coffeeDark','coffeeMid','coffeeBlack','islamic'].includes(theme)) theme='light';
-  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-coffeeMid','theme-coffeeBlack','theme-islamic','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
+  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-coffeeMid','theme-coffeeBlack','theme-islamic','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose','theme-custom');
   readerView.classList.add('theme-'+theme);
   document.querySelectorAll('.theme-dot').forEach(d=>d.classList.toggle('active', d.dataset.theme===theme));
   readerView.style.removeProperty('--custom-paper'); readerView.style.removeProperty('--custom-paper-text');
@@ -2390,7 +2411,7 @@ const customPaperColor=document.getElementById('customPaperColor');
 const applyCustomPaper=document.getElementById('applyCustomPaper');
 function applyCustomPaperColor(color,persist=true){
   if(!/^#[0-9a-fA-F]{6}$/.test(color)) return;
-  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-coffeeMid','theme-coffeeBlack','theme-islamic','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose');
+  readerView.classList.remove('theme-light','theme-aged','theme-ivory','theme-sage','theme-ink','theme-midnightPaper','theme-coffeeDark','theme-coffeeMid','theme-coffeeBlack','theme-islamic','theme-sepia','theme-dark','theme-green','theme-parchment','theme-aged2','theme-rose','theme-custom');
   readerView.classList.add('theme-custom');
   readerView.style.setProperty('--custom-paper',color);
   const c=parseInt(color.slice(1),16), r=(c>>16)&255,g=(c>>8)&255,b=c&255;
@@ -2966,6 +2987,88 @@ function jumpToRange(pIndex, start, end){
   }
   if(readerMode!=='paginated') pEl.scrollIntoView({block:'center', behavior:'smooth'});
 }
+
+
+/* ---------------- advanced global library search ---------------- */
+const globalSearchOverlay = document.getElementById('globalSearchOverlay');
+const globalSearchResults = document.getElementById('globalSearchResults');
+const globalSearchQuery = document.getElementById('globalSearchQuery');
+const globalSearchClose = document.getElementById('globalSearchClose');
+const librarySearchBtn = document.getElementById('librarySearchBtn');
+
+function escapeRegExp(v){ return String(v||'').replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function highlightQuery(text, query){
+  const raw=String(text||'');
+  if(!query) return escapeHtml(raw);
+  const q=String(query).trim();
+  if(!q) return escapeHtml(raw);
+  const parts=q.split(/\s+/).filter(Boolean).map(escapeRegExp);
+  if(!parts.length) return escapeHtml(raw);
+  const re=new RegExp('('+parts.join('|')+')','giu');
+  let out='', last=0, m;
+  while((m=re.exec(raw))){
+    out+=escapeHtml(raw.slice(last,m.index));
+    out+='<mark class="global-search-hit">'+escapeHtml(m[0])+'</mark>';
+    last=m.index+m[0].length;
+  }
+  out+=escapeHtml(raw.slice(last));
+  return out;
+}
+async function runGlobalLibrarySearch(){
+  const input=document.getElementById('searchInput');
+  const q=(input?.value||'').trim();
+  if(q.length<1){ toast('لطفاً کلمه یا جمله‌ای برای جستجو وارد کنید.'); input?.focus(); return; }
+  const qn=normalizeSearchText(q);
+  const deep=document.getElementById('deepSearchChk')?.checked;
+  const results=[];
+  for(const b of library){
+    const title=String(b.title||''), author=String(b.author||''), folder=String(getBookFolder(b)||'');
+    const tags=(b.tags||[]).join(' ');
+    const meta=[title,author,folder,tags].map(normalizeSearchText).join(' ');
+    let matched=meta.includes(qn), snippet='';
+    if(!matched && deep){
+      const content=await cachedBookContent(b.id);
+      const cn=normalizeSearchText(content);
+      const pos=cn.indexOf(qn);
+      matched=pos>=0;
+      if(matched){
+        const original=String(content||'');
+        const approx=Math.min(original.length, Math.max(0,pos));
+        snippet=original.slice(Math.max(0,approx-90),Math.min(original.length,approx+220)).replace(/\s+/g,' ');
+      }
+    }
+    if(matched) results.push({b,snippet});
+    if(results.length>=150) break;
+  }
+  globalSearchQuery.textContent=`جستجو برای: ${q} — ${results.length} نتیجه`;
+  globalSearchResults.innerHTML=results.length ? results.map(({b,snippet})=>{
+    const title=highlightQuery(b.title||'بدون عنوان',q);
+    const author=highlightQuery(b.author||'',q);
+    const folder=highlightQuery(getBookFolder(b)||'',q);
+    const sn=snippet?highlightQuery(snippet,q):'';
+    return `<button class="global-search-result" type="button" data-book-id="${escapeHtml(String(b.id))}"><b>${title}</b>${author?`<span>${author}</span>`:''}${folder?`<small>📁 ${folder}</small>`:''}${sn?`<div class="snippet">${sn}</div>`:''}</button>`;
+  }).join('') : '<div class="global-search-empty">نتیجه‌ای پیدا نشد.</div>';
+  globalSearchResults.querySelectorAll('[data-book-id]').forEach(el=>el.addEventListener('click',()=>{
+    closeGlobalSearch();
+    openBook(el.dataset.bookId);
+  }));
+  globalSearchOverlay.classList.remove('hidden');
+  globalSearchOverlay.setAttribute('aria-hidden','false');
+  document.body.classList.add('global-search-open');
+}
+function closeGlobalSearch(){
+  globalSearchOverlay.classList.add('hidden');
+  globalSearchOverlay.setAttribute('aria-hidden','true');
+  document.body.classList.remove('global-search-open');
+}
+if(librarySearchBtn) librarySearchBtn.addEventListener('click',runGlobalLibrarySearch);
+if(globalSearchClose) globalSearchClose.addEventListener('click',closeGlobalSearch);
+if(globalSearchOverlay) globalSearchOverlay.addEventListener('click',e=>{ if(e.target===globalSearchOverlay) closeGlobalSearch(); });
+const librarySearchInput=document.getElementById('searchInput');
+if(librarySearchInput) librarySearchInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();runGlobalLibrarySearch();}
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && globalSearchOverlay && !globalSearchOverlay.classList.contains('hidden')) closeGlobalSearch(); });
 
 /* ---------------- multilingual UI ---------------- */
 const I18N={
