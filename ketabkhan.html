@@ -196,9 +196,9 @@ input,select,textarea{font-family:inherit;}
 .paper-custom-wrap{display:flex;align-items:center;gap:8px;margin-top:8px;}
 .paper-custom-wrap input[type=color]{width:38px;height:30px;border:1px solid var(--gold-dim);border-radius:7px;background:transparent;padding:2px;}
 .paper-custom-wrap button{flex:1;}
-.theme-coffeeMid .reader-content-wrap{background:linear-gradient(135deg,#5a3b25,#6d4a2e);color:#fff;}
-.theme-coffeeMid .reader-content-wrap p,.theme-coffeeMid .reader-content-wrap h1,.theme-coffeeMid .reader-content-wrap h2,.theme-coffeeMid .reader-content-wrap h3{color:#fff;}
-.theme-islamic .reader-content-wrap{background-color:#efe0b9;color:#2b2115;background-image:radial-gradient(circle at 18px 18px,rgba(105,66,18,.18) 0 2px,transparent 2.5px),linear-gradient(45deg,transparent 46%,rgba(105,66,18,.10) 47% 53%,transparent 54%),linear-gradient(-45deg,transparent 46%,rgba(105,66,18,.08) 47% 53%,transparent 54%);background-size:36px 36px,36px 36px,36px 36px;}
+.theme-coffeeMid .reader-content-wrap{background:linear-gradient(135deg,#7c5330,#8a6039);color:#faf1e0;}
+.theme-coffeeMid .reader-content-wrap p,.theme-coffeeMid .reader-content-wrap h1,.theme-coffeeMid .reader-content-wrap h2,.theme-coffeeMid .reader-content-wrap h3{color:#faf1e0;}
+.theme-islamic .reader-content-wrap{background-color:#efe0b9;color:#2b2115;background-image:radial-gradient(circle at 18px 18px,rgba(105,66,18,.34) 0 2.4px,transparent 3px),linear-gradient(45deg,transparent 46%,rgba(105,66,18,.20) 47% 53%,transparent 54%),linear-gradient(-45deg,transparent 46%,rgba(105,66,18,.17) 47% 53%,transparent 54%);background-size:36px 36px,36px 36px,36px 36px;}
 
 .search-panel{
   background:linear-gradient(180deg, var(--ink-2), var(--ink));
@@ -397,6 +397,7 @@ html[data-shell="paper"] .card .cover.title-cover .title-seal span{color:#17130d
 .theme-dot[data-theme=ivory]{background:#f6f0df;}
 .theme-dot[data-theme=coffeeDark]{background:#2a1a12;border-color:#c9a46a;}
 .theme-dot[data-theme=coffeeBlack]{background:#17100d;border-color:#d4b47a;}
+.theme-dot[data-theme=coffeeMid]{background:#7c5330;border-color:#e8c99a;}
 .theme-dot.active{border-color:var(--gold);}
 
 .menu-wrap{position:relative;}
@@ -490,8 +491,8 @@ html[data-shell="paper"] .card .cover.title-cover .title-seal span{color:#17130d
 .reader-meta-author{text-align:center;color:#6b5f45;font-size:14px;margin:0 0 40px;}
 .reader-loading{text-align:center;padding:80px 20px;font-size:15px;color:inherit;opacity:.75;}
 .hl{border-radius:3px;padding:0 1px;cursor:pointer;}
-mark.search-hit{background:#ffe14d;color:#241505;padding:0 1px;border-radius:2px;}
-mark.search-hit.current{background:#ffd400;color:#241505;box-shadow:0 0 0 2px #b8860b;}
+mark.search-hit{background:rgba(215,25,32,.16);color:#d71920;font-weight:800;padding:0 1px;border-radius:2px;}
+mark.search-hit.current{background:#d71920;color:#fff;box-shadow:0 0 0 2px #8f0f16;}
 
 .pdf-original-wrap{max-width:1080px;width:100%;margin:0 auto;padding:82px 20px 92px;overflow:auto;display:flex;justify-content:center;align-items:flex-start;}
 .pdf-page-canvas{max-width:100%;height:auto;box-shadow:0 12px 34px rgba(0,0,0,.28);background:#fff;}
@@ -738,7 +739,7 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
 
   <div class="search-panel">
     <div class="search-row">
-      <input type="text" id="searchInput" placeholder="جستجو در عنوان، نویسنده یا برچسب…">
+      <input type="search" id="searchInput" enterkeyhint="search" autocomplete="off" placeholder="جستجو در عنوان، نویسنده یا برچسب…">
       <button class="btn primary" id="librarySearchBtn" type="button" title="جستجو">⌕ جستجو</button>
       <select id="sortSelect">
         <option value="recent" title="بر اساس زمان افزودن کتاب مرتب می‌کند">آخرین افزوده‌شده‌ها</option>
@@ -901,7 +902,7 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
           <button class="search-tab" id="tabAllBooks">همه‌ی کتاب‌ها</button>
         </div>
         <div class="search-input-row">
-          <input type="text" id="inBookSearch" placeholder="جستجو…">
+          <input type="search" id="inBookSearch" enterkeyhint="search" autocomplete="off" placeholder="جستجو…">
           <span class="match-count" id="matchCount"></span>
           <button class="icon-btn" id="prevMatch">↑</button>
           <button class="icon-btn" id="nextMatch">↓</button>
@@ -957,6 +958,14 @@ html[data-shell="paper"] .reader-content-wrap{color:#11100d;}
 </div>
 
 <div class="toast" id="toast"></div>
+
+  <div id="globalSearchOverlay" class="global-search-overlay hidden" aria-hidden="true">
+    <div class="global-search-panel">
+      <div class="global-search-head"><strong id="globalSearchTitle">نتایج جستجو</strong><button class="circle-btn" id="globalSearchClose" type="button">×</button></div>
+      <div class="global-search-query" id="globalSearchQuery"></div>
+      <div id="globalSearchResults" class="global-search-results"></div>
+    </div>
+  </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
@@ -1279,7 +1288,7 @@ function normalizeSearchText(value){
 
 async function filteredSortedBooks(){
   const q = normalizeSearchText(document.getElementById('searchInput').value);
-  const deep = document.getElementById('deepSearchChk').checked;
+  const deep = document.getElementById('deepSearchChk')?.checked;
   const sortBy = document.getElementById('sortSelect').value;
 
   const flags = await Promise.all(library.map(async b=>{
@@ -1494,7 +1503,7 @@ document.getElementById('searchInput').addEventListener('input', ()=>{
   librarySearchTimer=setTimeout(()=>renderLibrary(),180);
 });
 document.getElementById('sortSelect').addEventListener('change', renderLibrary);
-document.getElementById('deepSearchChk').addEventListener('change', renderLibrary);
+document.getElementById('deepSearchChk')?.addEventListener('change', renderLibrary);
 
 /* ---------------- add book modal ---------------- */
 const addModalBackdrop = document.getElementById('addModalBackdrop');
@@ -2926,7 +2935,22 @@ inBookSearchInput.addEventListener('input', ()=>{
   clearTimeout(searchDebounceTimer);
   searchDebounceTimer = setTimeout(runCurrentSearch, 220);
 });
-inBookSearchInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();runCurrentSearch();}});
+inBookSearchInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    if(searchScope==='all'){
+      // لمس علامت جستجوی کیبورد: نتایج را در نمای تمام‌صفحه با برجسته‌سازی سرخ نشان بده
+      const libInput=document.getElementById('searchInput');
+      if(libInput) libInput.value=inBookSearchInput.value;
+      const deepChk=document.getElementById('deepSearchChk');
+      if(deepChk) deepChk.checked=true;
+      searchDropdown.classList.add('hidden');
+      runGlobalLibrarySearch();
+      return;
+    }
+    runCurrentSearch();
+  }
+});
 
 document.getElementById('nextMatch').onclick = ()=>{
   if(readerMode==='printed'){
@@ -3083,6 +3107,7 @@ const UI_TRANSLATIONS={
 function translateKnownUI(lang){
   const dict=UI_TRANSLATIONS[lang]||{};
   document.querySelectorAll('button,label,h1,h2,h3,h4,p,span,option').forEach(el=>{
+    if(el.children.length) return; // پرهیز از حذف عناصر تودرتو (مثل چک‌باکس داخل label) هنگام بازنویسی textContent
     if(el.dataset.i18nBase===undefined) el.dataset.i18nBase=el.textContent.trim();
     const base=el.dataset.i18nBase;
     if(dict[base]) el.textContent=dict[base]; else if(lang==='fa') el.textContent=base;
@@ -3187,13 +3212,5 @@ if('serviceWorker' in navigator && (location.protocol==='https:' || location.hos
 
 })();
 </script>
-
-  <div id="globalSearchOverlay" class="global-search-overlay hidden" aria-hidden="true">
-    <div class="global-search-panel">
-      <div class="global-search-head"><strong id="globalSearchTitle">نتایج جستجو</strong><button class="circle-btn" id="globalSearchClose" type="button">×</button></div>
-      <div class="global-search-query" id="globalSearchQuery"></div>
-      <div id="globalSearchResults" class="global-search-results"></div>
-    </div>
-  </div>
 </body>
 </html>
